@@ -1,0 +1,26 @@
+
+:root {
+    --background-light: #2c2c2c;
+    --background-dark: #170d24;
+
+    --accent-default: #702b9e;
+    --accent-dark: #220044;
+
+    --roundness: 1rem;
+}
+
+/* body {
+    display: grid;
+    grid-template-areas: 'h c' 'm c';
+    grid-template-columns: 30rem 1fr;
+    grid-template-rows: 0fr 1fr;
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        display: grid;
+        grid-template-areas: 'h' 'c' 'm';
+        grid-template-columns: 1fr;
+        grid-template-rows: 0fr 1fr 1fr;
+    }
+} */

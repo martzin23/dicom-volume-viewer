@@ -1,0 +1,417 @@
+
+/* ----------------------------------------- */
+
+* {
+    box-sizing: border-box;
+    margin: 0rem;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    user-select: none;
+    color: var(--text-default);
+
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--text-default);
+}
+
+a:empty {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0%;
+    left: 0%;
+    z-index: 10;
+}
+
+hr {
+    border: calc(var(--thickness) / 2) solid var(--general-default);
+    border-radius: var(--roundness);
+}
+
+input {
+    font-size: 1rem;
+}
+
+input[type="text"] {
+    background-color: var(--general-dark);
+    border-radius: var(--roundness);
+    border: none;
+    padding: 0.5rem 0.751rem 0.5rem 0.75rem;
+    width: 6rem;
+    font-family: monospace;
+}
+
+input[type="text"]:invalid {
+    background-color: var(--error-dark);
+    color: var(--error-default);
+}
+
+input[type="color"] {
+    width: 6rem;
+}
+
+input[type="button"] {
+    background: none;
+    border: none;
+}
+
+input[type="color"] {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0rem;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: var(--roundness); 
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0rem;
+}
+
+input[type="range"] {
+    -webkit-appearance: none;
+    background: var(--general-dark);
+    height: 0.5rem;
+    border-radius: var(--roundness);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    transition: 0.25s;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: var(--general-default);
+    border-radius: var(--roundness);
+    aspect-ratio: 1;
+    height: 2rem;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transition: 0.25s;
+    background-color: var(--general-highlight);
+}
+
+input[type="file"]::file-selector-button {
+    transition: 0.25s;
+    background-color: var(--general-default);
+    border-radius: var(--roundness);
+    border: none;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    color: var(--text-default);
+    font-size: 1rem;
+}
+input[type="file"]::file-selector-button:hover {
+    transition: 0.25s;
+    background-color: var(--general-highlight);
+    cursor: pointer;
+}
+
+/* ----------------------------------------- */
+
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.block {
+    border-radius: var(--roundness);
+    background-color: var(--transluscent);
+    box-shadow: 0.25rem 0.25rem 0rem var(--shadow);
+}
+
+.comment {
+    transition: 0.25s;
+    padding: 0.5rem;
+    color: var(--general-highlight);
+}
+
+.comment:hover {
+    transition: 0.25s;
+    color: var(--text-default);
+}
+
+.value {
+    background-color: var(--general-dark);
+    border-radius: var(--roundness);
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-family: monospace;
+    width: max-content;
+}
+
+.error {
+    width: 100%;
+    padding: 1rem;
+    color: var(--error-default);
+    background-color: var(--error-dark);
+    border-radius: var(--roundness);
+}
+
+.error:empty {
+    display: none;
+}
+
+.warning {
+    width: 100%;
+    padding: 1rem;
+    color: var(--warning-default);
+    background-color: var(--warning-dark);
+    border-radius: var(--roundness);
+}
+
+.warning:empty {
+    display: none;
+}
+
+/* ----------------------------------------- */
+
+.button {
+    transition: 0.25s;
+    background-color: var(--general-default);
+    border-radius: var(--roundness);
+    border: none;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.button:hover {
+    transition: 0.25s;
+    background-color: var(--general-highlight);
+}
+
+.button.active {
+    transition: 0.25s;
+    background-color: var(--accent-default);
+    box-shadow: 0.25rem 0.25rem 0rem var(--accent-dark);
+}
+
+.button.round {
+    border-radius: var(--roundness);
+    padding: 0rem;
+    height: 2rem;
+    width: 2rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button, .button * {
+    user-select: none;
+    cursor: pointer;
+}
+
+/* ----------------------------------------- */
+
+.boolean {
+    transition: 0.25s;
+    border-radius: var(--roundness);
+    background-color: var(--general-dark);
+    width: 4rem;
+    height: 2rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.boolean[value="true"] {
+    transition: 0.25s;
+    padding-left: 2rem;
+}
+
+.boolean>* {
+    transition: 0.25s;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--roundness);
+    background-color: var(--general-default);
+}
+
+.boolean:hover>* {
+    background-color: var(--general-highlight);
+}
+
+.boolean:hover {
+    cursor: pointer;
+}
+
+/* ----------------------------------------- */
+
+.toggle, .slider, .incrementer, .drag, .color, .vector, .switch{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}
+
+.switch {
+    flex-wrap: wrap;
+}
+
+.drag .button, .drag .button * {
+    cursor: ew-resize;
+}
+
+/* ----------------------------------------- */
+
+.code {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.code::after {
+    content: attr(language);
+    font-family: monospace;
+    background-color: var(--general-default);
+    border-radius: var(--roundness);
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+textarea {
+    background-color: var(--general-dark);
+    border-radius: var(--roundness);
+    border: none;
+    padding: 0.5rem;
+    width: 6rem;
+    font-family: monospace;
+    font-size: 0.8rem;
+    resize: none;
+}
+
+/* ----------------------------------------- */
+
+.popup {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--transluscent);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup>div {
+    border-radius: var(--roundness);
+    background: linear-gradient(0deg, var(--error-dark) 0%, var(--background-light) 100%);
+    box-shadow: 0.25rem 0.25rem 0rem var(--shadow);
+
+    max-width: calc(100vw - var(--spacing) * 2);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.popup .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.popup .row i {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+
+    background-color: var(--error-default);
+    box-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup .row p {
+    color: var(--error-default);
+    text-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
+}
+
+.popup>div>p {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.popup .button {
+    align-self: flex-end;
+}
+
+/* ----------------------------------------- */
+
+*[tooltip] {
+    position: relative;
+}
+
+*[tooltip]:hover::after {
+    content: attr(tooltip);
+
+    position: absolute;
+    left: 0rem;
+    bottom: calc(100% + 0.5rem);
+    z-index: 100;
+
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: var(--roundness);
+    background-color: var(--background-light);
+    box-shadow: 0.25rem 0.25rem 0rem var(--shadow);
+    border: 1px solid var(--accent-default);
+
+    opacity: 0%;
+    animation-name: appear-delayed;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+}
+
+
+figure>*[tooltip]:hover::after {
+    width: max-content;
+    max-width: 25rem;
+}
+
+/* ----------------------------------------- */

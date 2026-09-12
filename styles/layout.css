@@ -1,0 +1,187 @@
+
+/* ----------------------------------------- */
+
+img {
+    border-radius: var(--roundness);
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+/* ----------------------------------------- */
+
+figure {
+    border-radius: var(--roundness);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+}
+
+figure>figcaption {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+figure>figcaption>hr {
+    transition: 0.25s;
+    flex-grow: 1;
+}
+
+figure:hover>figcaption>hr {
+    transition: 0.25s;
+    border-color: var(--general-highlight);
+}
+
+figure>figcaption>p {
+    transition: 0.25s;
+    color: var(--text-muted);
+    width: max-content;
+}
+
+figure:hover>figcaption>p {
+    transition: 0.25s;
+    color: var(--text-default);
+}
+
+/* ----------------------------------------- */
+
+body {
+    height: 100dvh;
+    width: 100dvw;
+    background: linear-gradient(0deg, var(--background-dark) 0%, var(--background-light) 100%);
+    box-shadow: 0rem 0rem 1rem var(--shadow) inset;
+    position: relative;
+
+    display: grid;
+    grid-template-areas: 'h h' 'm c';
+    grid-template-columns: 30rem 1fr;
+    grid-template-rows: 0fr 1fr;
+    padding: var(--spacing);
+    gap: var(--spacing);
+}
+
+header {grid-area: h;}
+menu {grid-area: m;}
+canvas {grid-area: c;}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--roundness);
+    overflow-y: hidden;
+}
+
+header>nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+menu {
+    padding: 0rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--general-default) #00000000;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+/* ----------------------------------------- */
+
+:root:fullscreen body {
+    padding-top: 0rem;
+    display: grid;
+    grid-template-areas: 'm h' 'm .';
+    grid-template-columns: 30rem 1fr;
+    grid-template-rows: 0fr 0fr;
+}
+
+:root:fullscreen canvas  {
+    border-radius: 0rem;
+    position: absolute;
+    top: 0rem;
+    left: 0rem;
+    width: 100vw;
+    height: 100vh;
+}
+
+:root:fullscreen header {
+    padding-top: var(--spacing);
+}
+
+:root:fullscreen header>nav {
+    background-color: var(--background-light);
+}
+
+:root:fullscreen menu {
+    background: linear-gradient(0deg, var(--background-dark) 0%, var(--background-light) 100%);
+    height: min-content;
+    max-height: calc(100vh - 4rem);
+    margin-top: var(--spacing);
+}
+
+/* :root:fullscreen header>nav {
+    animation-name: hide-upward;
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+}
+
+:root:fullscreen header:hover>nav {
+    animation-name: appear-downward;
+    animation-duration: 0.25s;
+    animation-fill-mode: forwards;
+} */
+
+:root:fullscreen body>* {
+    z-index: 2;
+}
+
+:root:fullscreen body>canvas {
+    z-index: 1;
+}
+
+/* ----------------------------------------- */
+
+@media screen and (max-width: 768px) {
+    :root:fullscreen menu {
+        max-height: calc(100vh - 2rem);
+    }
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        display: grid;
+        grid-template-areas: 'h' 'c' 'm';
+        grid-template-columns: 1fr;
+        grid-template-rows: 0fr 1fr 1fr;
+    }
+
+    :root:fullscreen body {
+        display: grid;
+        grid-template-areas: 'h' '.' 'm';
+        grid-template-columns: 1fr;
+        grid-template-rows: 0fr 2fr 1fr;
+    }
+
+    :root:fullscreen menu {
+        height: auto;
+    }
+}
+
+/* ----------------------------------------- */
