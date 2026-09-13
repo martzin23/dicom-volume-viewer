@@ -6,18 +6,22 @@ import * as Loader from "../utility/loader.js";
 export default class WebGLManager {
     static async initialize(canvas) {
         const fragment_shader_code = await (await fetch('./scripts/voxels/shader/fragment.glsl')).text();
-        const height_texture = await WebGL.Texture.load('../assets/images/textures/height.jpg');
-        return new WebGLManager(canvas, fragment_shader_code, height_texture);
+        const width = 16, height = 16, depth = 16;
+        const data = new Float32Array(width * height * depth);
+        for (let i=0; i<width * height * depth; i++)
+            data[i] = Math.random() * 2.0;
+        const volume_texture = new WebGL.Texture(data, width, height, depth);
+        return new WebGLManager(canvas, fragment_shader_code, volume_texture);
     }
 
-    constructor(canvas, fragment_shader_code, height_texture) {
+    constructor(canvas, fragment_shader_code, volume_texture) {
         this.canvas = canvas;
         this.vertex_buffer;
         this.vertex_location;
         this.uniform_buffer;
         this.program;
         this.base_render_size = {x: 2560, y: 1440};
-        this.height_texture = height_texture;
+        this.volume_texture = volume_texture;
 
         this.gl = this.canvas.getContext("webgl2");
         if (!this.gl)
@@ -30,7 +34,7 @@ export default class WebGLManager {
             canvas_size: Vector.vec(this.base_render_size.x, this.base_render_size.y),
             buffer_size: Vector.vec(this.base_render_size.x, this.base_render_size.y),
 
-            grid_size: Vector.vec(this.height_texture.width, this.height_texture.height, 256),
+            grid_size: Vector.vec(this.volume_texture.width, this.volume_texture.height, this.volume_texture.depth),
             render_scale: 1,
             
             camera_rotation: Matrix.mat(1.0),
@@ -92,7 +96,7 @@ export default class WebGLManager {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertex_buffer);
         this.gl.vertexAttribPointer(this.vertex_location, 2, this.gl.FLOAT, false, 2 * Float32Array.BYTES_PER_ELEMENT, 0);
 
-        this.height_texture.setup(this.gl, "height_texture", this.program, 0, "LINEAR", "CLAMP_TO_EDGE");
+        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "NEAREST", "CLAMP_TO_EDGE", "R32F");
 
         this.synchronize();
     }
@@ -107,7 +111,7 @@ export default class WebGLManager {
 
         this.gl.useProgram(this.program);
         this.gl.enableVertexAttribArray(this.vertex_location);
-        this.height_texture.bind(this.gl);
+        this.volume_texture.bind(this.gl);
 
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
@@ -121,11 +125,12 @@ export default class WebGLManager {
     }
 
     reloadImage(image, height = 256) {
-        this.height_texture.destroy(this.gl);
-        this.height_texture = new WebGL.Texture(image.data, image.width, image.height);
-        this.height_texture.setup(this.gl, "height_texture", this.program, 0, "LINEAR", "CLAMP_TO_EDGE");
-        this.uniforms.grid_size.x = this.height_texture.width;
-        this.uniforms.grid_size.y = this.height_texture.height;
+        return;
+        this.volume_texture.destroy(this.gl);
+        this.volume_texture = new WebGL.Texture(image.data, image.width, image.height);
+        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "NEAREST", "CLAMP_TO_EDGE", "R32F");
+        this.uniforms.grid_size.x = this.volume_texture.width;
+        this.uniforms.grid_size.y = this.volume_texture.height;
         this.uniforms.grid_size.z = height;
     }
 
@@ -153,7 +158,7 @@ export default class WebGLManager {
 
         this.gl.useProgram(this.program);
         this.gl.enableVertexAttribArray(this.vertex_location);
-        this.height_texture.bind(this.gl);
+        this.volume_texture.bind(this.gl);
 
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 

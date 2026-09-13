@@ -93,18 +93,31 @@ export function setFeedbaclVaryings(gl, program, varyings, mode = "SEPARATE_ATTR
     }
 }
 
-export function createTexture(gl, width, height, format = "RGBA8", filter = "LINEAR", wrap_mode = "REPEAT", data = null) {
+export function createTexture(gl, width, height, depth = null, format = "RGBA8", filter = "LINEAR", wrap_mode = "REPEAT", data = null) {
     if (formats[format].filterable == false && filter == "LINEAR")
         throw new Error(`Error in texture creation: Tried to set LINEAR filtering on a non filterable format (${format})`);
 
     let texture = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, texture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl[format], width, height, 0, gl[formats[format].channels], gl[formats[format].type], data);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[(formats[format].filterable) ? "LINEAR" : "NEAREST"]);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[filter]);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrap_mode]);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap_mode]);
-    gl.bindTexture(gl.TEXTURE_2D, null);
+    if (!depth) {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl[format], width, height, 0, gl[formats[format].channels], gl[formats[format].type], data);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[(formats[format].filterable) ? "LINEAR" : "NEAREST"]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[filter]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrap_mode]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap_mode]);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
+    else {
+        gl.bindTexture(gl.TEXTURE_3D, texture);
+        gl.texImage3D(gl.TEXTURE_3D, 0, gl[format], width, height, depth, 0, gl[formats[format].channels], gl[formats[format].type], data);
+        // gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl[(formats[format].filterable) ? "LINEAR" : "NEAREST"]);
+        gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl[filter]);
+        gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl[wrap_mode]);
+        gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl[wrap_mode]);
+        gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl[wrap_mode]);
+        gl.bindTexture(gl.TEXTURE_3D, null);
+    }
     return texture;
 }
 
@@ -127,20 +140,22 @@ export class Texture {
         this.data = data;
         this.width = width;
         this.height = height;
-        this.depth = null;
+        this.depth = depth;
         this.texture;
         this.binding;
         this.location;
+        this.format;
     }
 
     destroy(gl) {
         gl.deleteTexture(this.texture);
     }
 
-    setup(gl, name, program, binding, filter, wrap_mode) {
+    setup(gl, name, program, binding, filter, wrap_mode, format) {
         this.binding = 0x84C0 + binding;
         this.location = gl.getUniformLocation(program, name);
-        this.texture = createTexture(gl, this.width, this.height, "RGBA8", filter, wrap_mode, this.data);
+        this.format = format;
+        this.texture = createTexture(gl, this.width, this.height, this.depth, format, filter, wrap_mode, this.data);
 
         gl.useProgram(program);
         gl.uniform1i(this.location, binding);
@@ -148,11 +163,16 @@ export class Texture {
 
     bind(gl) {
         gl.activeTexture(this.binding);
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        if (!this.depth)
+            gl.bindTexture(gl.TEXTURE_2D, this.texture);
+        else
+            gl.bindTexture(gl.TEXTURE_3D, this.texture);
     }
 
     store(gl, data) {
-        const format = "RGBA8";
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl[format], this.width, this.height, 0, gl[formats[format].channels], gl[formats[format].type], data);
+        if (!this.depth)
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.format], this.width, this.height, 0, gl[formats[this.format].channels], gl[formats[this.format].type], data);
+        else
+            gl.texImage3D(gl.TEXTURE_3D, 0, gl[this.format], this.width, this.height, this.depth, 0, gl[formats[this.format].channels], gl[formats[this.format].type], data);
     } 
 }

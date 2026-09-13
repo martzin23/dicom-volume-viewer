@@ -1,5 +1,6 @@
 #version 300 es
 precision highp float;
+precision highp sampler3D;
 
 layout(std140) uniform UniformBlock {
     vec2 canvas_size;
@@ -39,7 +40,7 @@ struct Data {
     int marches;
 };
 
-uniform sampler2D height_texture;
+uniform sampler3D volume_texture;
 in vec2 texture_coordinates;
 out vec4 output_color;
 
@@ -47,6 +48,7 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density);
 vec2 intersect(Ray ray, vec3 p_min, vec3 p_max);
 vec3 getNormal(vec3 position, float epsilon);
 float getHeight(vec3 position);
+bool isFilled(vec3 position);
 
 void main() {
     float aspect_ratio = uniforms.canvas_size.y / uniforms.canvas_size.x;
@@ -65,22 +67,27 @@ void main() {
     vec3 sun = normalize(vec3(1.0, 0.5, 0.0));
     float voxel = mix(1.0, abs(dot(voxel_normal, normalize(vec3(1.0, 0.5, 0.75)))), uniforms.voxel_blend);
     if (position.x != -1.0) {
-        if (uniforms.shading_mode == 1.0) {
-            float height = mix(1.0, position.z / (uniforms.grid_size.z * uniforms.height_multiplier * uniforms.grid_scale), uniforms.fade_blend);
-            vec3 normal = getNormal(position, uniforms.normals_epsilon);
-            float diffuse = dot(normal, sun) * 0.5 + 0.5;
-            output_color = vec4(vec3(diffuse * height * voxel), 1.0);
-        } else if (uniforms.shading_mode == 2.0) {
-            vec3 normal = getNormal(position, uniforms.normals_epsilon) * 0.5 + 0.5;
-            output_color = vec4(normal * voxel, 1.0);
-        } else if (uniforms.shading_mode == 3.0) {
-            vec3 color = texture(height_texture, (vec2(1.0, 0.0) - position.xy / (uniforms.grid_size.xy * uniforms.grid_scale)) * vec2(1.0, -1.0)).xyz;
-            float value = (color.r + color.g + color.b) / 3.0;
-            output_color = vec4(mix(color, vec3(value), uniforms.grayscale_blend) * voxel, 1.0);
-        } else {
-            float height = mix(1.0, position.z / (uniforms.grid_size.z * uniforms.height_multiplier * uniforms.grid_scale), uniforms.fade_blend);
-            output_color = vec4(vec3(voxel * height), 1.0);
-        }
+        // if (uniforms.shading_mode == 1.0) {
+        //     float height = position.z;
+        //     vec3 normal = getNormal(position, uniforms.normals_epsilon);
+        //     float diffuse = dot(normal, sun) * 0.5 + 0.5;
+        //     output_color = vec4(vec3(diffuse * height * voxel), 1.0);
+        // } else if (uniforms.shading_mode == 2.0) {
+        //     vec3 normal = getNormal(position, uniforms.normals_epsilon) * 0.5 + 0.5;
+        //     output_color = vec4(normal * voxel, 1.0);
+        // } else if (uniforms.shading_mode == 3.0) {
+        //     vec3 color = vec3(position.z);
+        //     float value = (color.r + color.g + color.b) / 3.0;
+        //     output_color = vec4(mix(color, vec3(value), uniforms.grayscale_blend) * voxel, 1.0);
+        // } else {
+        //     float height = position.z;
+        //     output_color = vec4(vec3(voxel * height), 1.0);
+        // }
+        vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale);
+        float value = texture(volume_texture, coordinate).r;
+        output_color = vec4(coordinate, 1.0);
+        output_color = vec4(vec3(value), 1.0);
+        // output_color = vec4(position, 1.0);
     } else {
         output_color = vec4(1.0 - pow(2.71828 ,-density.x), 1.0 - pow(2.71828 ,-density.y), 1.0 - pow(2.71828 ,-density.z), 1.0);
     }
@@ -92,6 +99,8 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
     vec2 bbox_t = intersect(ray, vec3(0.0), uniforms.grid_size * uniforms.grid_scale);
     if (bbox_t.x > bbox_t.y)
         return vec3(-1.0);
+    else
+        return floor(ray.origin + ray.direction * (bbox_t.x + 0.01));
 
     vec3 position = floor(ray.origin + ray.direction * (bbox_t.x + 0.01));
     vec3 march = sign(ray.inverse);
@@ -102,7 +111,10 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
     vec3 t = (planes - ray.origin) * ray.inverse;
 
     int axis;
-    while (true) {
+    int counter = 1000;
+    while (counter < 0) {
+        counter--;
+
         if (t.x < t.y) {
             if (t.x < t.z) {
                 position.x += march.x;
@@ -125,7 +137,7 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
             }
         }
 
-        if (position.z <= getHeight(position)) {
+        if (isFilled(position)) {
             vec3 mask = vec3(0.0);
             mask[axis] = 1.0;
             normal = mask;
@@ -155,12 +167,13 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max) {
 }
 
 float getHeight(vec3 position) {
-    vec4 data = texture(height_texture, (vec2(1.0, 0.0) - position.xy / (uniforms.grid_size.xy * uniforms.grid_scale)) * vec2(1.0, -1.0));
-    float height = 256.0 * (data.r + data.g + data.b) / 3.0; // average
-    // float height = (data.r * 256.0 + data.g + data.b / 256.0); // full
-    if (uniforms.height_invert == 1.0)
-        height = (uniforms.grid_size.z + 2.0) * uniforms.height_invert - height;
-    return (height + uniforms.height_offset) * uniforms.height_multiplier * uniforms.grid_scale;
+    return position.z;
+}
+
+bool isFilled(vec3 position) {
+    vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale);
+    float value = texture(volume_texture, coordinate).r;
+    return value >= 1.0;
 }
 
 vec3 getNormal(vec3 position, float epsilon) {

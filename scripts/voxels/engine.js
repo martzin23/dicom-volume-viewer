@@ -17,7 +17,7 @@ class Engine {
     constructor(gpu) {
         this.gpu = gpu;
         this.fps = new FPSCounter(document.getElementById("output-fps"), undefined, " fps");
-        this.camera = new Camera(document.getElementById("canvas"), Vector.vec(this.gpu.height_texture.width), Vector.vec(-135.0, 35.0), 0.3, 5.0, undefined, false, true);
+        this.camera = new Camera(document.getElementById("canvas"), Vector.vec(this.gpu.volume_texture.width), Vector.vec(-135.0, 35.0), 0.3, 5.0, undefined, false, true);
         this.gui = new GUIManager(document.getElementById("canvas"), this.gpu, this.camera);
         this.fps_handler = setInterval(() => this.fps.set(), 1000);
     }
