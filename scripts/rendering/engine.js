@@ -1,8 +1,9 @@
 import WebGLManager from './gpu.js'
 import GUIManager from './gui.js';
+import Camera from './camera.js';
 import FPSCounter from '../utility/fps.js';
-import Camera from '../utility/camera.js';
-import * as Vector from '../utility/vector.js';
+import Vector2D from '../math/vector2d.js';
+import Vector3D from '../math/vector3d.js';
 
 class Engine {
     static async initialize() {
@@ -17,7 +18,7 @@ class Engine {
     constructor(gpu) {
         this.gpu = gpu;
         this.fps = new FPSCounter(document.getElementById("output-fps"), undefined, " fps");
-        this.camera = new Camera(document.getElementById("canvas"), Vector.vec(this.gpu.volume_texture.width), Vector.vec(-135.0, 35.0), 0.3, 5.0, undefined, false, true);
+        this.camera = new Camera(document.getElementById("canvas"), new Vector3D(this.gpu.volume_texture.width), new Vector2D(-135.0, 35.0), 0.3, 5.0, undefined, false, true);
         this.gui = new GUIManager(document.getElementById("canvas"), this.gpu, this.camera);
         this.fps_handler = setInterval(() => this.fps.set(), 1000);
     }

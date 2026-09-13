@@ -154,7 +154,8 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
         // }
         vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale);
         float value = texture(volume_texture, coordinate).r;
-        density += 0.03 * value;
+        // density += 0.03 * value;
+        density += 0.03 * clamp(value - 1.0, 0.0, 1.0);
 
         if (position.x > limit.x || position.x < 0.0 || position.y > limit.y || position.y < 0.0 || position.z > limit.z || position.z < 0.0)
             return vec3(-1.0);

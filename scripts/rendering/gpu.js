@@ -1,11 +1,13 @@
-import * as Matrix from "../utility/matrix.js";
-import * as Vector from "../utility/vector.js";
-import * as WebGL from "../utility/webgl.js";
+import Matrix from "../math/matrix.js";
+import Vector from "../math/vector.js";
+import Vector2D from "../math/vector2d.js";
+import Vector3D from "../math/vector3d.js";
 import * as Loader from "../utility/loader.js";
+import * as WebGL from "./webgl.js";
 
 export default class WebGLManager {
     static async initialize(canvas) {
-        const fragment_shader_code = await (await fetch('./scripts/voxels/shader/fragment.glsl')).text();
+        const fragment_shader_code = await (await fetch('./scripts/shaders/fragment.glsl')).text();
         const width = 16, height = 16, depth = 16;
         const data = new Float32Array(width * height * depth);
         for (let i=0; i<width * height * depth; i++)
@@ -20,25 +22,29 @@ export default class WebGLManager {
         this.vertex_location;
         this.uniform_buffer;
         this.program;
-        this.base_render_size = {x: 2560, y: 1440};
+        this.base_render_size = new Vector2D(2560, 1440);
         this.volume_texture = volume_texture;
 
         this.gl = this.canvas.getContext("webgl2");
         if (!this.gl)
             throw new ReferenceError("This device or browser does not support WebGL2.");
 
+        const ext = this.gl.getExtension('OES_texture_float_linear');
+        if (!ext)
+            throw new Error('Failed to get extension: "OES_texture_float_linear"');
+
         window.addEventListener("resize", () => {this.synchronize();});
         this.canvas.addEventListener("resize", () => {this.synchronize();});
 
         this.uniforms = {
-            canvas_size: Vector.vec(this.base_render_size.x, this.base_render_size.y),
-            buffer_size: Vector.vec(this.base_render_size.x, this.base_render_size.y),
+            canvas_size: new Vector2D(this.base_render_size.x, this.base_render_size.y),
+            buffer_size: new Vector2D(this.base_render_size.x, this.base_render_size.y),
 
-            grid_size: Vector.vec(this.volume_texture.width, this.volume_texture.height, this.volume_texture.depth),
+            grid_size: new Vector3D(this.volume_texture.width, this.volume_texture.height, this.volume_texture.depth),
             render_scale: 1,
             
-            camera_rotation: Matrix.mat(1.0),
-            camera_position: Vector.vec(0.0, -3.0, 0.0),
+            camera_rotation: new Matrix(1.0),
+            camera_position: new Vector3D(0.0, -3.0, 0.0),
             fov: 1.0,
 
             grid_scale: 1.0,
@@ -96,7 +102,7 @@ export default class WebGLManager {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.vertex_buffer);
         this.gl.vertexAttribPointer(this.vertex_location, 2, this.gl.FLOAT, false, 2 * Float32Array.BYTES_PER_ELEMENT, 0);
 
-        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "NEAREST", "CLAMP_TO_EDGE", "R32F");
+        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "LINEAR", "CLAMP_TO_EDGE", "R32F");
 
         this.synchronize();
     }
@@ -119,12 +125,13 @@ export default class WebGLManager {
     synchronize() {
         const width = Math.min(this.canvas.clientWidth, this.base_render_size.x);
         const height = Math.min(this.canvas.clientHeight, this.base_render_size.y);
-        this.uniforms.canvas_size = Vector.vec(width, height);
+        this.uniforms.canvas_size = new Vector2D(width, height);
         this.canvas.width = width / this.uniforms.render_scale;
         this.canvas.height = height / this.uniforms.render_scale;
     }
 
     reloadImage(image, height = 256) {
+        throw new Error("Tried to reload image: unimplemented");
         return;
         this.volume_texture.destroy(this.gl);
         this.volume_texture = new WebGL.Texture(image.data, image.width, image.height);
@@ -171,12 +178,13 @@ export default class WebGLManager {
 function packUniforms(data) {
     let array = [];
     for (const el in data) {
-        if (Vector.test(data[el]))
-            array.push(Vector.array(data[el]));
-        else if (Matrix.test(data[el]))
-            array.push(Matrix.array(data[el]));
+        const value = data[el]
+        if (value instanceof Vector)
+            array.push(value.array());
+        else if (value instanceof Matrix)
+            array.push(value.array());
         else
-            array.push(data[el]);
+            array.push(value);
     }
     return array.flat();
 }

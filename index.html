@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="./styles/general.css">
 	<link rel="stylesheet" href="./styles/style_green.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<script type="module" defer src="./scripts/voxels/engine.js"></script>
+	<script type="module" defer src="./scripts/rendering/engine.js"></script>
 </head>
 
 <body>
@@ -49,6 +49,11 @@
 					<hr>
 					<p>Camera</p>
 				</figcaption>
+				<div id="group-camera-mode" class="column"></div>
+				<div>
+					<div id="group-camera-firstperson" class="column gap-small"></div>
+					<div id="group-camera-orbit" class="column gap-small"></div>
+				</div>
 			</figure>
 		</section>
 

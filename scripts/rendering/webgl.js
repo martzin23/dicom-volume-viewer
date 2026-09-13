@@ -1,4 +1,4 @@
-import * as Loader from "./loader.js";
+import * as Loader from "../utility/loader.js";
 
 const formats = {
     R8: {channels: "RED", type: "UNSIGNED_BYTE", filterable: true},
