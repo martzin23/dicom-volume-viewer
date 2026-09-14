@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="./styles/style_green.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<script type="module" defer src="./scripts/rendering/engine.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/dicom-parser@1.8.21/dist/dicomParser.min.js"></script>
 </head>
 
 <body>
@@ -25,7 +26,7 @@
 	</header>
 
 	<menu class="block" id="menu">
-
+		
 		<section id="group-unselected" class="hidden">
 			<figure>
 				<figcaption>
@@ -35,8 +36,9 @@
 				<p class="comment">No settings tab selected.</p>
 			</figure>
 		</section>
-
+		
 		<section class="hidden">
+			<input type="file" id="fileInput" webkitdirectory multiple>
 			<figure id="group-display">
 				<figcaption>
 					<hr>

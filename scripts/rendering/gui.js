@@ -222,7 +222,9 @@ export default class GUIManager {
 
 
         addToggle(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_invert = value;}, () => gpu.uniforms.height_invert, "Invert height").addTooltip("The highest points become the lowest, the lowest become the highest");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.x = value;}, () => gpu.uniforms.grid_scale.x, "Grid multiplier X", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.y = value;}, () => gpu.uniforms.grid_scale.y, "Grid multiplier Y", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.z = value;}, () => gpu.uniforms.grid_scale.z, "Grid multiplier Z", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
         addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_multiplier = value;}, () => gpu.uniforms.height_multiplier, "Height multiplier", 0, Infinity).addTooltip("Multiply the calculated height by this value");
         addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_offset = value;}, () => gpu.uniforms.height_offset, "Height offset", -Infinity, Infinity, 1.0).addTooltip("Add this value to the height calculation");
 

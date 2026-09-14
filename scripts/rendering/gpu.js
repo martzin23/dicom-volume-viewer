@@ -4,6 +4,7 @@ import Vector2D from "../math/vector2d.js";
 import Vector3D from "../math/vector3d.js";
 import * as Loader from "../utility/loader.js";
 import * as WebGL from "./webgl.js";
+import * as DICOM from "../utility/dicom_parser.js";
 
 export default class WebGLManager {
     static async initialize(canvas) {
@@ -13,10 +14,26 @@ export default class WebGLManager {
         for (let i=0; i<width * height * depth; i++)
             data[i] = Math.random() * 2.0;
         const volume_texture = new WebGL.Texture(data, width, height, depth);
+
         return new WebGLManager(canvas, fragment_shader_code, volume_texture);
     }
 
     constructor(canvas, fragment_shader_code, volume_texture) {
+        // ----
+        document.getElementById("fileInput")?.addEventListener("change", async (event) => {
+            const files = event.target.files;
+            const volume = await DICOM.loadVolumeExample(files);
+            
+            console.log(volume);
+            this.volume_texture.destroy(this.gl);
+            this.volume_texture = new WebGL.Texture(volume.data, volume.rows, volume.columns, volume.depth);
+            this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "NEAREST", "CLAMP_TO_EDGE", "R32F");
+            this.uniforms.grid_size.x = this.volume_texture.width;
+            this.uniforms.grid_size.y = this.volume_texture.height;
+            this.uniforms.grid_size.z = this.volume_texture.depth;
+        });
+        // ----
+
         this.canvas = canvas;
         this.vertex_buffer;
         this.vertex_location;
@@ -47,7 +64,7 @@ export default class WebGLManager {
             camera_position: new Vector3D(0.0, -3.0, 0.0),
             fov: 1.0,
 
-            grid_scale: 1.0,
+            grid_scale: new Vector3D(1.0),
             shading_mode: 0.0,
             padding_a: 0.0,
             padding_b: 0.0,

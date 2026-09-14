@@ -13,10 +13,8 @@ layout(std140) uniform UniformBlock {
     vec3 camera_position;
     float fov;
 
-    float grid_scale;
+    vec3 grid_scale;
     float shading_mode;
-    float padding_a;
-    float padding_b;
 
     float height_offset;
     float height_multiplier;
@@ -49,6 +47,7 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max);
 vec3 getNormal(vec3 position, float epsilon);
 float getHeight(vec3 position);
 bool isFilled(vec3 position);
+float getAverageValue(vec3 position);
 
 void main() {
     float aspect_ratio = uniforms.canvas_size.y / uniforms.canvas_size.x;
@@ -110,7 +109,7 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
     vec3 t = (planes - ray.origin) * ray.inverse;
 
     int axis;
-    int counter = 1000;
+    int counter = 10000;
     while (counter > 0) {
         counter--;
 
@@ -154,8 +153,11 @@ vec3 traverse(Ray ray, out vec3 normal, inout vec3 density) {
         // }
         vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale);
         float value = texture(volume_texture, coordinate).r;
+        // float value = getAverageValue(position);
+        float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
         // density += 0.03 * value;
-        density += 0.03 * clamp(value - 1.0, 0.0, 1.0);
+        // density += 0.01 * clamp(pow(value, 0.5) - 1.0, 0.0, 1.0);
+        density += 0.01 * pow(normalized, 5.0) * 25.0;
 
         if (position.x > limit.x || position.x < 0.0 || position.y > limit.y || position.y < 0.0 || position.z > limit.z || position.z < 0.0)
             return vec3(-1.0);
@@ -175,6 +177,20 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max) {
 
 float getHeight(vec3 position) {
     return position.z;
+}
+
+float getAverageValue(vec3 position) {
+    int radius = 1;
+    float value = 0.0;
+    for (int x=-1; x<radius+1; x++) {
+        for (int y=-1; y<radius+1; y++) {
+            for (int z=-1; z<radius+1; z++) {
+                vec3 coordinate = (position + vec3(x, y, z)) / (uniforms.grid_size * uniforms.grid_scale);
+                value += texture(volume_texture, coordinate).r;
+            }
+        }
+    }
+    return value / pow(float(radius) * 2.0 + 1.0, 3.0);
 }
 
 bool isFilled(vec3 position) {
