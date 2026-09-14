@@ -18,14 +18,14 @@ class Engine {
     constructor(gpu) {
         this.gpu = gpu;
         this.fps = new FPSCounter(document.getElementById("output-fps"), undefined, " fps");
-        this.camera = new Camera(document.getElementById("canvas"), new Vector3D(this.gpu.volume_texture.width), new Vector2D(-135.0, 35.0), 0.3, 5.0, undefined, false, true);
+        this.camera = new Camera(document.getElementById("canvas"), new Vector3D(this.gpu.volume_texture.width), new Vector2D(-135.0, 35.0), 0.3, 1.0, undefined);
         this.gui = new GUIManager(document.getElementById("canvas"), this.gpu, this.camera);
         this.fps_handler = setInterval(() => this.fps.set(), 1000);
     }
 
     update() {
-        this.camera.update();
         this.fps.update();
+        this.camera.update();
         this.gpu.uniforms.camera_rotation = this.camera.getRotationMatrix();
         this.gpu.uniforms.camera_position = this.camera.position;
         this.gpu.uniforms.fov = this.camera.fov;

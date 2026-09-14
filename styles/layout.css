@@ -136,18 +136,6 @@ section {
     margin-top: var(--spacing);
 }
 
-/* :root:fullscreen header>nav {
-    animation-name: hide-upward;
-    animation-duration: 0.25s;
-    animation-fill-mode: forwards;
-}
-
-:root:fullscreen header:hover>nav {
-    animation-name: appear-downward;
-    animation-duration: 0.25s;
-    animation-fill-mode: forwards;
-} */
-
 :root:fullscreen body>* {
     z-index: 2;
 }

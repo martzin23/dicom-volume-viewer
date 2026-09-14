@@ -1,4 +1,5 @@
 import Vector3D from "../math/vector3d.js";
+import Matrix from "../math/matrix.js";
 import switchAttribute from '../utility/switch_attribute.js';
 import { addButton } from '../widgets/button.js';
 import { addComment } from '../widgets/comment.js';
@@ -203,7 +204,6 @@ export default class GUIManager {
     
         addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.rotation.x = value;}, () => camera.rotation.x, "Horizontal rotation", -Infinity, Infinity, 0.1).addTooltip("Rotation of the camera around the Z axis");
         addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.rotation.y = value;}, () => camera.rotation.y, "Vertical rotation", -90, 90, 0.1).addTooltip("Rotation of the camera around the local X axis");
-        addSlider(document.getElementById("group-camera-firstperson"), (value) => {camera.speed = value;}, () => camera.speed, "Speed", 0, 10, true).addTooltip("Translation speed of the camera");
         addSlider(document.getElementById("group-camera-firstperson"), (value) => {camera.sensitivity = value;}, () => camera.sensitivity, "Sensitivity", 0.01, 0.5, true).addTooltip("Rotation speed of the camera");
         addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.fov = value;}, () => camera.fov, "Field of view", 0, Infinity, 0.005).addTooltip("Angular extent of the observable scene");
         addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.position.x = value;}, () => camera.position.x, "X", -Infinity, Infinity, 0.1).addTooltip("Position of the camera along the X axis");
@@ -213,7 +213,6 @@ export default class GUIManager {
         addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.position = Vector3D.add(Vector3D.mul(Matrix.rot2dir(camera.rotation.x, -camera.rotation.y), -value), camera.orbit_anchor)}, () => (Vector3D.add(camera.position, camera.orbit_anchor)).len(), "Distance", 0, Infinity, 0.1).addTooltip("Distance of the camera from the orbit anchor point");
         addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.rotation.x = value; camera.updateOrbit();}, () => camera.rotation.x, "Horizontal angle", -Infinity, Infinity, 0.1).addTooltip("Horizontal angle around the camera orbit anchor");
         addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.rotation.y = value; camera.updateOrbit();}, () => camera.rotation.y, "Vertical angle", -90, 90, 0.1).addTooltip("Vertical angle around the camera orbit anchor");
-        addSlider(document.getElementById("group-camera-orbit"), (value) => {camera.speed = value;}, () => camera.speed, "Speed", 0, 10, true).addTooltip("Translation speed of the camera");
         addSlider(document.getElementById("group-camera-orbit"), (value) => {camera.sensitivity = value;}, () => camera.sensitivity, "Sensitivity", 0.01, 0.5, true).addTooltip("Rotation speed of the camera");
         addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.fov = value;}, () => camera.fov, "Field of view", 0, Infinity, 0.005).addTooltip("Angular extent of the observable scene");
         addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.orbit_anchor.x = value; camera.updateOrbit();}, () => camera.orbit_anchor.x, "X", -Infinity, Infinity, 0.1).addTooltip("Position of the orbit anchor along the X axis");

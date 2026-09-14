@@ -64,7 +64,7 @@ export default class WebGLManager {
             camera_position: new Vector3D(0.0, -3.0, 0.0),
             fov: 1.0,
 
-            grid_scale: new Vector3D(1.0),
+            grid_scale: new Vector3D(1.0, 1.0, 1.0),
             shading_mode: 0.0,
             padding_a: 0.0,
             padding_b: 0.0,

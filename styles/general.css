@@ -11,10 +11,9 @@
     --shadow: hsl(214, 26%, 5%);
 
     --background-light: #252933;
-    /* --background-dark: #171c2b; */
-    --background-dark: #0d0e14;
+    --background-dark: #142620;
 
-    --accent-default: #41c498;
+    --accent-default: #1e7d5d;
     --accent-dark: #173f31;
 
     --error-default: #cf3173;
@@ -29,6 +28,7 @@
     --roundness: 0.5rem;
     --thickness: 0.5rem;
     --spacing: 2rem;
+    --packing: 0.5rem;
 }
 
 @media screen and (max-width: 768px) {
