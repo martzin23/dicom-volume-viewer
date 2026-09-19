@@ -15,98 +15,23 @@
 
 <body>
 
-	<header>
-		<nav class="block">
-			<div id="group-tabs"></div>
-			<div class="row">
-				<p class="value" id="output-fps">0 fps</p>
-			</div>
-		</nav>
-	</header>
-
 	<menu class="block" id="menu">
 		
-		<section id="group-unselected" class="hidden">
-			<figure>
-				<figcaption>
-					<hr>
-					<p>Unselected</p>
-				</figcaption>
-				<p class="comment">No settings tab selected.</p>
-			</figure>
-		</section>
-		
-		<section class="hidden">
+		<figure id="group-display">
+			<figcaption>
+				<hr>
+				<p>Display</p>
+			</figcaption>
+			<p class="value" id="output-fps">0 fps</p>
 			<input type="file" id="fileInput" webkitdirectory multiple>
-			<figure id="group-display">
-				<figcaption>
-					<hr>
-					<p>Display</p>
-				</figcaption>
-			</figure>
+		</figure>
 
-			<figure id="group-camera">
-				<figcaption>
-					<hr>
-					<p>Camera</p>
-				</figcaption>
-				<div id="group-camera-mode" class="column"></div>
-				<div>
-					<div id="group-camera-firstperson" class="column gap-small"></div>
-					<div id="group-camera-orbit" class="column gap-small"></div>
-				</div>
-			</figure>
-		</section>
-
-		<section>
-			<figure id="group-grid">
-				<figcaption>
-					<hr>
-					<p>Grid</p>
-				</figcaption>
-			</figure>
-
-			<figure id="group-shading-mode">
-				<figcaption>
-					<hr>
-					<p>Shading mode</p>
-				</figcaption>
-			</figure>
-
-			<figure id="group-shading">
-				<figcaption>
-					<hr>
-					<p>Shading</p>
-				</figcaption>
-				<div>
-					<div id="group-shading-flat" class="column"></div>
-					<div id="group-shading-shaded" class="column"></div>
-					<div id="group-shading-normal" class="column"></div>
-					<div id="group-shading-color" class="column"></div>
-				</div>
-			</figure>
-		</section>
-
-		<section class="hidden">
-			<figure id="group-heightmap">
-				<figcaption>
-					<hr>
-					<p>Heightmap Load</p>
-				</figcaption>
-				<p>Here, you can load your own height image. Light values have high elevation and dark values have low elevation.</p>
-				<input type="file" id="input-file" accept=".jpg,.png" value="Load image">
-			</figure>
-			<figure>
-				<figcaption>
-					<hr>
-					<p>Heightmap Preview</p>
-				</figcaption>
-				<img src="../assets/images/textures/height.jpg" alt="heightmap" id="output-preview">
-			</figure>
-		</section>
-
-		<section class="hidden" id="group-controls">
-		</section>
+		<figure id="group-grid">
+			<figcaption>
+				<hr>
+				<p>Grid</p>
+			</figcaption>
+		</figure>
 	</menu>
 
 	<canvas id="canvas" class="block"></canvas>

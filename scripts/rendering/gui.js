@@ -131,55 +131,10 @@ export default class GUIManager {
         document.addEventListener('mouseup', (event) => {
             this.mouse_states[event.button] = false;
         });
-
-        document.getElementById("input-file").addEventListener('change', async (event) => {
-            const file = event.target.files[0];
-            if (!file || !file.type.startsWith('image/'))
-                return;
-
-            const reader = new FileReader();
-            
-            reader.onload = function(event) {
-                const url = event.target.result;
-                
-                document.getElementById("output-preview").src = url;
-
-                const image = new Image();
-                image.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = image.width;
-                    canvas.height = image.height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(image, 0, 0);
-                    
-                    const image_data = ctx.getImageData(0, 0, image.width, image.height);
-
-                    gpu.reloadImage(image_data);
-                };
-                image.src = url;
-            };
-            
-            reader.readAsDataURL(file);
-        });
     }
 
     setupWidgets(gpu, camera) {
         setupAddTooltip();
-
-        addSwitch(
-            document.getElementById("group-tabs"), 
-            (value) => { this.switchTab(value, false); }, 
-            [
-                '<i class="fa fa-cog"></i>General', 
-                '<i class="fa fa-compass"></i>Traversal', 
-                '<i class="fa fa-area-chart"></i>Heightmap', 
-                '<i class="fa fa-info"></i>Controls', 
-            ], 
-            '<i class="fa fa-cog"></i>General',
-            undefined,
-            true
-        );
 
         addToggle(document.getElementById("group-display"), (value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen");
         addIncrement(document.getElementById("group-display"), (value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16).addTooltip("Higher number = lower resolution, improves performance");
@@ -190,57 +145,14 @@ export default class GUIManager {
             gpu.screenshot(date_time);
         }, '<i class="fa fa-download"></i>Screenshot').addTooltip("Save and download current rendered image");
 
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
 
-        addSwitch(
-            document.getElementById("group-camera-mode"),
-            (value) => {
-                switchAttribute(document.getElementById("group-camera-firstperson").parentNode, value, undefined, "hidden");
-                camera.orbit_mode = value;
-            },
-            ["First person", "Orbit"],
-            (camera.orbit_mode) ? "Orbit" : "First person",
-            "Camera mode"
-        );
-    
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.rotation.x = value;}, () => camera.rotation.x, "Horizontal rotation", -Infinity, Infinity, 0.1).addTooltip("Rotation of the camera around the Z axis");
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.rotation.y = value;}, () => camera.rotation.y, "Vertical rotation", -90, 90, 0.1).addTooltip("Rotation of the camera around the local X axis");
-        addSlider(document.getElementById("group-camera-firstperson"), (value) => {camera.sensitivity = value;}, () => camera.sensitivity, "Sensitivity", 0.01, 0.5, true).addTooltip("Rotation speed of the camera");
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.fov = value;}, () => camera.fov, "Field of view", 0, Infinity, 0.005).addTooltip("Angular extent of the observable scene");
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.position.x = value;}, () => camera.position.x, "X", -Infinity, Infinity, 0.1).addTooltip("Position of the camera along the X axis");
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.position.y = value;}, () => camera.position.y, "Y Position", -Infinity, Infinity, 0.1).addTooltip("Position of the camera along the Y axis");
-        addDrag(document.getElementById("group-camera-firstperson"), (value) => {camera.position.z = value;}, () => camera.position.z, "Z", -Infinity, Infinity, 0.1).addTooltip("Position of the camera along the Z axis");
-        
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.position = Vector3D.add(Vector3D.mul(Matrix.rot2dir(camera.rotation.x, -camera.rotation.y), -value), camera.orbit_anchor)}, () => (Vector3D.add(camera.position, camera.orbit_anchor)).len(), "Distance", 0, Infinity, 0.1).addTooltip("Distance of the camera from the orbit anchor point");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.rotation.x = value; camera.updateOrbit();}, () => camera.rotation.x, "Horizontal angle", -Infinity, Infinity, 0.1).addTooltip("Horizontal angle around the camera orbit anchor");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.rotation.y = value; camera.updateOrbit();}, () => camera.rotation.y, "Vertical angle", -90, 90, 0.1).addTooltip("Vertical angle around the camera orbit anchor");
-        addSlider(document.getElementById("group-camera-orbit"), (value) => {camera.sensitivity = value;}, () => camera.sensitivity, "Sensitivity", 0.01, 0.5, true).addTooltip("Rotation speed of the camera");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.fov = value;}, () => camera.fov, "Field of view", 0, Infinity, 0.005).addTooltip("Angular extent of the observable scene");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.orbit_anchor.x = value; camera.updateOrbit();}, () => camera.orbit_anchor.x, "X", -Infinity, Infinity, 0.1).addTooltip("Position of the orbit anchor along the X axis");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.orbit_anchor.y = value; camera.updateOrbit();}, () => camera.orbit_anchor.y, "Y Orbit anchor", -Infinity, Infinity, 0.1).addTooltip("Position of the orbit anchor along the Y axis");
-        addDrag(document.getElementById("group-camera-orbit"), (value) => {camera.orbit_anchor.z = value; camera.updateOrbit();}, () => camera.orbit_anchor.z, "Z", -Infinity, Infinity, 0.1).addTooltip("Position of the orbit anchor along the Z axis");
-
-
-        addToggle(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_invert = value;}, () => gpu.uniforms.height_invert, "Invert height").addTooltip("The highest points become the lowest, the lowest become the highest");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.x = value;}, () => gpu.uniforms.grid_scale.x, "Grid multiplier X", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.y = value;}, () => gpu.uniforms.grid_scale.y, "Grid multiplier Y", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale.z = value;}, () => gpu.uniforms.grid_scale.z, "Grid multiplier Z", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_multiplier = value;}, () => gpu.uniforms.height_multiplier, "Height multiplier", 0, Infinity).addTooltip("Multiply the calculated height by this value");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.height_offset = value;}, () => gpu.uniforms.height_offset, "Height offset", -Infinity, Infinity, 1.0).addTooltip("Add this value to the height calculation");
-
-        addSwitch(
-            document.getElementById("group-shading-mode"),
-            (value) => {
-                switchAttribute(document.getElementById("group-shading-shaded").parentNode, value, undefined, "hidden");
-                gpu.uniforms.shading_mode = value;
-            },
-            ["Flat", "Shaded", "Normals", "Color"],
-            "Flat"
-        ).addTooltip("The visual style of the surface");
-        addSlider(document.getElementById("group-shading-flat"), (value) => {gpu.uniforms.fade_blend = value;}, () => gpu.uniforms.fade_blend, "Height fade", 0.0, 1.0).addTooltip("Adds a darkening effect the lower the height is");
-        addSlider(document.getElementById("group-shading-shaded"), (value) => {gpu.uniforms.fade_blend = value;}, () => gpu.uniforms.fade_blend, "Height fade", 0.0, 1.0).addTooltip("Adds a darkening effect the lower the height is");
-        addSlider(document.getElementById("group-shading-shaded"), (value) => {gpu.uniforms.normals_epsilon = value;}, () => gpu.uniforms.normals_epsilon, "Normals epsilon", 0.0, 25.0).addTooltip("Terrain surface direction approximation, doesn't display when at 0.0, highter numbers mean lower precision");
-        addSlider(document.getElementById("group-shading-normal"), (value) => {gpu.uniforms.normals_epsilon = value;}, () => gpu.uniforms.normals_epsilon, "Normals epsilon", 0.0, 25.0).addTooltip("Terrain surface direction approximation, doesn't display when at 0.0, highter numbers mean lower precision");
-        addSlider(document.getElementById("group-shading-color"), (value) => {gpu.uniforms.grayscale_blend = value;}, () => gpu.uniforms.grayscale_blend, "Grayscale", 0.0, 1.0).addTooltip("Level of desaturation");
-        addSlider(document.getElementById("group-shading"), (value) => {gpu.uniforms.voxel_blend = value;}, () => gpu.uniforms.voxel_blend, "Voxel shading", 0.0, 1.0).addTooltip("Adds shading to individual voxels (zoom in)");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001).addTooltip("test");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001).addTooltip("test");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001).addTooltip("test");
+        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001).addTooltip("test");
     }
 }

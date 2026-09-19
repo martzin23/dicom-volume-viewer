@@ -63,21 +63,14 @@ export default class WebGLManager {
             camera_rotation: new Matrix(1.0),
             camera_position: new Vector3D(0.0, -3.0, 0.0),
             fov: 1.0,
-
-            grid_scale: new Vector3D(1.0, 1.0, 1.0),
-            shading_mode: 0.0,
-            padding_a: 0.0,
-            padding_b: 0.0,
             
-            height_offset: 0.0,
-            height_multiplier: 0.25,
-            height_gamma: 1.0,
-            height_invert: 0.0,
+            grid_stretch: new Vector3D(1.0, this.volume_texture.width / this.volume_texture.height, this.volume_texture.width / this.volume_texture.depth),
+            grid_scale: 1.0,
 
-            fade_blend: 1.0,
-            voxel_blend: 0.0,
-            grayscale_blend: 0.0,
-            normals_epsilon: 2.0,
+            gamma: 1.0,
+            strength: 0.01,
+            focus: 1.0,
+            slope: 0.0,
         };
 
         const vertices = new Float32Array([

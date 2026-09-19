@@ -61,9 +61,8 @@ body {
     position: relative;
 
     display: grid;
-    grid-template-areas: 'h h' 'm c';
+    grid-template-areas: 'm c';
     grid-template-columns: 30rem 1fr;
-    grid-template-rows: 0fr 1fr;
     padding: var(--spacing);
     gap: var(--spacing);
 }
@@ -90,85 +89,24 @@ header>nav {
 }
 
 menu {
-    padding: 0rem;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-color: var(--general-default) #00000000;
-}
-
-section {
-    display: flex;
-    flex-direction: column;
     padding: 1rem;
 }
 
 /* ----------------------------------------- */
 
-:root:fullscreen body {
-    padding-top: 0rem;
-    display: grid;
-    grid-template-areas: 'm h' 'm .';
-    grid-template-columns: 30rem 1fr;
-    grid-template-rows: 0fr 0fr;
-}
-
-:root:fullscreen canvas  {
-    border-radius: 0rem;
-    position: absolute;
-    top: 0rem;
-    left: 0rem;
-    width: 100vw;
-    height: 100vh;
-}
-
-:root:fullscreen header {
-    padding-top: var(--spacing);
-}
-
-:root:fullscreen header>nav {
-    background-color: var(--background-light);
-}
-
-:root:fullscreen menu {
-    background: linear-gradient(0deg, var(--background-dark) 0%, var(--background-light) 100%);
-    height: min-content;
-    max-height: calc(100vh - 4rem);
-    margin-top: var(--spacing);
-}
-
-:root:fullscreen body>* {
-    z-index: 2;
-}
-
-:root:fullscreen body>canvas {
-    z-index: 1;
-}
-
-/* ----------------------------------------- */
-
 @media screen and (max-width: 768px) {
-    :root:fullscreen menu {
-        max-height: calc(100vh - 2rem);
-    }
+
 }
 
 @media screen and (max-width: 600px) {
     body {
         display: grid;
-        grid-template-areas: 'h' 'c' 'm';
+        grid-template-areas: 'c' 'm';
         grid-template-columns: 1fr;
-        grid-template-rows: 0fr 1fr 1fr;
-    }
-
-    :root:fullscreen body {
-        display: grid;
-        grid-template-areas: 'h' '.' 'm';
-        grid-template-columns: 1fr;
-        grid-template-rows: 0fr 2fr 1fr;
-    }
-
-    :root:fullscreen menu {
-        height: auto;
+        grid-template-rows: 1fr 1fr;
     }
 }
 

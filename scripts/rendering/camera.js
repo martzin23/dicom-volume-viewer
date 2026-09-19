@@ -8,16 +8,22 @@ export default class Camera {
 
     constructor(
         canvas,
-        position = new Vector3D(0.0), 
+        radius = 0.0, 
         rotation = new Vector2D(0.0, 0.0), 
         fov = 0.5, 
-        sensitivity = 0.2,
+        rotation_sensitivity = 0.5,
+        rotation_smoothness = 0.9,
+        zoom_sensitivity = 0.02,
+        zoom_smoothness = 0.95,
         orbit_anchor = new Vector3D(0.0, 0.0, 0.0)
     ) {
-        this.position = position;
+        this.position = Vector3D.add(orbit_anchor, new Vector3D(radius * 2.0, 0.0, 0.0));
         this.rotation = rotation;
         this.fov = fov;
-        this.sensitivity = sensitivity;
+        this.rotation_sensitivity = rotation_sensitivity,
+        this.rotation_smoothness = rotation_smoothness,
+        this.zoom_sensitivity = zoom_sensitivity,
+        this.zoom_smoothness = zoom_smoothness,
         this.orbit_anchor = orbit_anchor;
 
         this.movable = false;
@@ -45,8 +51,8 @@ export default class Camera {
         document.addEventListener("mousemove", (event) => {
             if (!this.movable) return;
             // this.updateOrbit(event.movementX, event.movementY);
-            this.speed.x = event.movementX;
-            this.speed.y = event.movementY;
+            this.speed.x = event.movementX * this.rotation_sensitivity;
+            this.speed.y = event.movementY * this.rotation_sensitivity;
         });
         
         document.addEventListener('wheel', (event) => {
@@ -55,17 +61,12 @@ export default class Camera {
         }, { passive: false });
 
         document.addEventListener('wheel', (event) => {
-            if (this.scrollable) {
-                const delta = (event.deltaY < 0) ? -1 : 1;
-                this.speed.z = delta * 0.03;
-            }
+            if (this.scrollable)
+                this.speed.z = (event.deltaY < 0) ? -this.zoom_sensitivity : this.zoom_sensitivity;
         });
 
         Pointer.addTouchListener(canvas, (event) => {
-            this.updateOrbit(event.drag_x * this.sensitivity * 4.0, event.drag_y * this.sensitivity * 4.0);
-
-            if (event.zoom != 0)
-                this.position = Vector3D.add(this.position, Vector3D.mul(Matrix.rot2dir(this.rotation.x, -this.rotation.y), this.sensitivity * event.zoom));
+            this.speed = new Vector3D(event.drag_x * this.sensitivity * 4.0, event.drag_y * this.sensitivity * 4.0, event.zoom * this.zoom_sensitivity);
         });
     }
 
@@ -76,15 +77,15 @@ export default class Camera {
     }
 
     updateRotation(dh = 0.0, dv = 0.0) {
-        this.rotation.x += dh * this.sensitivity * Math.min(this.fov, 1.0);
-        this.rotation.y += dv * this.sensitivity * Math.min(this.fov, 1.0);
+        this.rotation.x += dh * Math.min(this.fov, 1.0);
+        this.rotation.y += dv * Math.min(this.fov, 1.0);
         this.rotation.x = this.rotation.x % 360.0;
         this.rotation.y = Math.max(Math.min(this.rotation.y, 90), -90);
     }
 
-    updateOrbit(dh = 0.0, dv = 0.0, dz = 1.0) {
-        const radius = Vector3D.sub(this.position, this.orbit_anchor).len() * dz;
-        this.updateRotation(dh / this.sensitivity, dv / this.sensitivity);
+    updateOrbit(dh = 0.0, dv = 0.0, dz = 0.0) {
+        const radius = Vector3D.sub(this.position, this.orbit_anchor).len() * (1.0 + dz);
+        this.updateRotation(dh, dv);
         this.position = Vector3D.add(Vector3D.mul(Matrix.rot2dir(this.rotation.x, -this.rotation.y), -radius), this.orbit_anchor);
     }
 
@@ -95,7 +96,7 @@ export default class Camera {
             this.speed.z = 0.0;
             return;
         }
-        this.updateOrbit(this.speed.x, this.speed.y / 5.0, 1.0 + this.speed.z);
-        this.speed = Vector3D.mul(this.speed, 0.9);
+        this.updateOrbit(this.speed.x, this.speed.y, this.speed.z);
+        this.speed = Vector3D.mul(this.speed, new Vector3D(this.rotation_smoothness, this.rotation_smoothness, this.zoom_smoothness));
     }
 }
