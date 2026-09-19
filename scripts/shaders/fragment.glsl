@@ -126,7 +126,8 @@ vec3 getDensity(vec3 position) {
     float e = 2.71828;
     float diff = normalized - uniforms.focus;
     float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
-    return vec3(uniforms.strength * pow(focused, uniforms.gamma));
+    vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 0.0), focused);
+    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
 
     // return vec3(pow(uniforms.strength * normalized, uniforms.gamma));
 }
