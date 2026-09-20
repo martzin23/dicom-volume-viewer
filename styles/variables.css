@@ -1,0 +1,36 @@
+
+:root {
+    font-size: 12px;
+    --roundness: 0.5rem;
+    --spacing: 2rem;
+}
+
+:root {
+    --general-highlight: #ffffff40;
+    --general-default: #ffffff20;
+    --general-dark: #0d0d0d80;
+
+    --text-default: #ffffff;
+    --text-muted: #aaaaaa;
+
+    --transluscent: #00000040;
+    --shadow: hsl(214, 26%, 5%);
+
+    --background-light: #252933;
+    --background-dark: #142620;
+
+    --accent-default: #1e7d5d;
+    --accent-dark: #173f31;
+
+    --error-default: #cf3173;
+    --error-dark: #3b1826;
+
+    --warning-default: #d8973c;
+    --warning-dark: #56331f;
+}
+
+@media screen and (max-width: 768px) {
+    :root {
+        --spacing: 1rem;
+    }
+}

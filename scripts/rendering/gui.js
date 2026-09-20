@@ -5,6 +5,7 @@ import { switchSetIndex } from '../widgets/switch.js';
 import { createToggle } from '../widgets/toggle.js';
 import { setupAddTooltip } from '../widgets/tooltip.js';
 import { createCollapse } from "../widgets/collapse.js";
+import * as DICOM from "../utility/dicom_parser.js";
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -132,23 +133,38 @@ export default class GUIManager {
     setupWidgets(gpu, camera) {
         setupAddTooltip();
 
-        const group_display = document.getElementById("group-display");
+        const menu = document.getElementById("menu");
+
+        const group_file = createCollapse("File", true);
+        const element_input = document.createElement("input");
+        element_input.type = "file";
+        element_input.setAttribute("webkitdirectory", true);
+        element_input.setAttribute("multiple", true);
+        element_input.addEventListener("change", async (event) => {
+            const files = event.target.files;
+            const volume = await DICOM.loadVolumeExample(files);
+            gpu.reloadImage(volume);
+        });
+        group_file.appendChild(element_input);
+        menu.appendChild(group_file);
+
+        const group_display = createCollapse("Display");
         group_display.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
         group_display.appendChild(createIncrement((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16));
+        menu.appendChild(group_display);
         
-        const group_grid = document.getElementById("group-grid");
-
+        const group_grid = createCollapse("Grid");
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
+        menu.appendChild(group_grid);
         
-        const element_dropdown = createCollapse("Transform")
-        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
-        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
-        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
-        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
-        
-        group_grid.appendChild(element_dropdown);
+        const group_transform = createCollapse("Transform");
+        group_transform.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
+        group_transform.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
+        group_transform.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
+        group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
+        menu.appendChild(group_transform);
     }
 }

@@ -66,7 +66,7 @@ export default class Camera {
         });
 
         Pointer.addTouchListener(canvas, (event) => {
-            this.speed = new Vector3D(event.drag_x * this.sensitivity * 4.0, event.drag_y * this.sensitivity * 4.0, event.zoom * this.zoom_sensitivity);
+            this.speed = new Vector3D(event.drag_x * this.rotation_sensitivity, event.drag_y * this.rotation_sensitivity, event.zoom * this.zoom_sensitivity);
         });
     }
 

@@ -111,14 +111,13 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max) {
 vec3 getDensity(vec3 position) {
     vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
     float value = texture(volume_texture, coordinate).r;
-    // return vec3(0.03 * value);
-    return vec3(uniforms.strength * pow(value, uniforms.gamma));
+    // return vec3(uniforms.strength * pow(value, uniforms.gamma));
 
-    // float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
-    // float smoothness = max(uniforms.slope, 0.0001);
-    // float e = 2.71828;
-    // float diff = normalized - uniforms.focus;
-    // float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
-    // vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 0.0), focused);
-    // return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
+    float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
+    float smoothness = max(uniforms.slope, 0.0001);
+    float e = 2.71828;
+    float diff = normalized - uniforms.focus;
+    float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
+    vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 1.0, 1.0), focused * 2.0 - 1.0);
+    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
 }

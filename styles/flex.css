@@ -64,15 +64,15 @@
 }
 
 .gap-small {
-    gap: var(--packing);
+    gap: 0.5rem;
 }
 
 .gap-medium {
-    gap: calc(2 * var(--packing));
+    gap: 1rem;
 }
 
 .gap-large {
-    gap: var(--spacing);
+    gap: 2rem;
 }
 
 /* ------------------------------------------------- */
@@ -82,15 +82,15 @@
 }
 
 .padding-small {
-    padding: var(--packing);
+    padding: 0.5rem;
 }
 
 .padding-medium {
-    padding: calc(2 * var(--packing));
+    padding: 1rem;
 }
 
 .padding-large {
-    padding: var(--spacing);
+    padding: 2rem;
 }
 
 /* ------------------------------------------------- */
@@ -100,15 +100,15 @@
 }
 
 .margin-small {
-    margin: var(--packing);
+    margin: 0.5rem;
 }
 
 .margin-medium {
-    margin: calc(2 * var(--packing));
+    margin: 1rem;
 }
 
 .margin-large {
-    margin: var(--spacing);
+    margin: 2rem;
 }
 
 /* ------------------------------------------------- */
