@@ -418,3 +418,26 @@ figure>*[tooltip]:hover::after {
 }
 
 /* ----------------------------------------- */
+
+.dropdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 0.5rem;
+
+    padding: 1rem;
+    background-color: #ffffff20;
+    border-radius: var(--roundness);
+}
+
+.dropdown.closed>* {
+    display: none;
+}
+
+.dropdown>*:first-child {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    gap: 1rem;
+}

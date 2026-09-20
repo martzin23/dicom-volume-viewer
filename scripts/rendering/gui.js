@@ -1,14 +1,10 @@
-import Vector3D from "../math/vector3d.js";
-import Matrix from "../math/matrix.js";
 import switchAttribute from '../utility/switch_attribute.js';
-import { addButton } from '../widgets/button.js';
-import { addComment } from '../widgets/comment.js';
-import { addDrag } from '../widgets/drag.js';
-import { addIncrement } from '../widgets/increment.js';
-import { addSlider } from '../widgets/slider.js';
-import { addSwitch, switchSetIndex } from '../widgets/switch.js';
-import { addToggle } from '../widgets/toggle.js';
+import { createDrag } from '../widgets/drag.js';
+import { createIncrement } from '../widgets/increment.js';
+import { switchSetIndex } from '../widgets/switch.js';
+import { createToggle } from '../widgets/toggle.js';
 import { setupAddTooltip } from '../widgets/tooltip.js';
+import { createCollapse } from "../widgets/collapse.js";
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -136,23 +132,23 @@ export default class GUIManager {
     setupWidgets(gpu, camera) {
         setupAddTooltip();
 
-        addToggle(document.getElementById("group-display"), (value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen");
-        addIncrement(document.getElementById("group-display"), (value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16).addTooltip("Higher number = lower resolution, improves performance");
-        addButton(document.getElementById("group-display"), () => {gpu.synchronize();}, "Fix aspect ratio").addTooltip("Click this if the image is stretched");
-        addButton(document.getElementById("group-display"), () => {
-            var current_date = new Date(); 
-            var date_time = "" + current_date.getFullYear() + (current_date.getMonth() + 1) + current_date.getDate() + current_date.getHours() + current_date.getMinutes() + current_date.getSeconds();
-            gpu.screenshot(date_time);
-        }, '<i class="fa fa-download"></i>Screenshot').addTooltip("Save and download current rendered image");
+        const group_display = document.getElementById("group-display");
+        group_display.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
+        group_display.appendChild(createIncrement((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16));
+        
+        const group_grid = document.getElementById("group-grid");
 
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001).addTooltip("Change the resolution of the grid, performance heavy");
-
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001).addTooltip("test");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001).addTooltip("test");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001).addTooltip("test");
-        addDrag(document.getElementById("group-grid"), (value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001).addTooltip("test");
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
+        
+        const element_dropdown = createCollapse("Transform")
+        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
+        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
+        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
+        element_dropdown.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
+        
+        group_grid.appendChild(element_dropdown);
     }
 }

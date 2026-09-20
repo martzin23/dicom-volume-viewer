@@ -27,11 +27,6 @@ struct Ray {
     vec3 direction;
     vec3 inverse;
 };
-struct Data {
-    vec3 position;
-    bool collided;
-    int marches;
-};
 
 uniform sampler3D volume_texture;
 in vec2 texture_coordinates;
@@ -52,7 +47,6 @@ void main() {
     camera_ray.direction = (uniforms.camera_rotation * vec4(normalize(vec3(centered_coordinates.x * uniforms.fov, 1.0, centered_coordinates.y * uniforms.fov)), 1.0)).xyz;
     camera_ray.inverse = 1.0 / camera_ray.direction;
 
-    vec3 voxel_normal;
     vec3 density = traverse(camera_ray);
     vec3 color = vec3(1.0 - pow(2.71828 ,-density.x), 1.0 - pow(2.71828 ,-density.y), 1.0 - pow(2.71828 ,-density.z));
     output_color = vec4(color, (color.x + color.y + color.z) / 3.0);
@@ -117,17 +111,14 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max) {
 vec3 getDensity(vec3 position) {
     vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
     float value = texture(volume_texture, coordinate).r;
-    float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
     // return vec3(0.03 * value);
-    // return vec3(0.01 * pow(normalized, 5.0) * 25.0);
-    // float focused = normalized - ((uniforms.focus) * uniforms.slope);
+    return vec3(uniforms.strength * pow(value, uniforms.gamma));
 
-    float smoothness = max(uniforms.slope, 0.0001);
-    float e = 2.71828;
-    float diff = normalized - uniforms.focus;
-    float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
-    vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 0.0), focused);
-    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
-
-    // return vec3(pow(uniforms.strength * normalized, uniforms.gamma));
+    // float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
+    // float smoothness = max(uniforms.slope, 0.0001);
+    // float e = 2.71828;
+    // float diff = normalized - uniforms.focus;
+    // float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
+    // vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 0.0, 0.0), focused);
+    // return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
 }
