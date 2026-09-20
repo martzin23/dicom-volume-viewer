@@ -1,0 +1,30 @@
+
+input[type="range"] {
+    -webkit-appearance: none;
+    background: var(--general-dark);
+    height: 0.5rem;
+    border-radius: var(--roundness);
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    transition: 0.25s;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background: var(--general-default);
+    border-radius: var(--roundness);
+    aspect-ratio: 1;
+    height: 2rem;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transition: 0.25s;
+    background-color: var(--general-highlight);
+}
+
+.slider{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}

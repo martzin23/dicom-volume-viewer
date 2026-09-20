@@ -1,0 +1,11 @@
+
+.comment {
+    transition: 0.25s;
+    padding: 0.5rem;
+    color: var(--general-highlight);
+}
+
+.comment:hover {
+    transition: 0.25s;
+    color: var(--text-default);
+}

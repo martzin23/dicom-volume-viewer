@@ -1,0 +1,41 @@
+
+.toggle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}
+
+.boolean {
+    transition: 0.25s;
+    border-radius: var(--roundness);
+    background-color: var(--general-dark);
+    width: 4rem;
+    height: 2rem;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.boolean[value="true"] {
+    transition: 0.25s;
+    padding-left: 2rem;
+}
+
+.boolean>* {
+    transition: 0.25s;
+    height: 100%;
+    aspect-ratio: 1;
+    border-radius: var(--roundness);
+    background-color: var(--general-default);
+}
+
+.boolean:hover>* {
+    background-color: var(--general-highlight);
+}
+
+.boolean:hover {
+    cursor: pointer;
+}

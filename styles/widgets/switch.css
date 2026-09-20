@@ -1,0 +1,12 @@
+
+.switch{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+}
+
+.switch {
+    flex-wrap: wrap;
+}

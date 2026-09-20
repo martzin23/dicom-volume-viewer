@@ -1,7 +1,7 @@
 
 export function createCollapse(name = "Collapse") {
     const element_base = document.createElement("div");
-    element_base.classList.add("dropdown");
+    element_base.classList.add("collapse");
     element_base.classList.add("closed");
 
     const element_icon = document.createElement("i");

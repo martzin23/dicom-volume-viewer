@@ -1,0 +1,50 @@
+
+button {
+    position: relative;
+    
+    transition: 0.25s;
+    background-color: var(--general-default);
+    border-radius: var(--roundness);
+    border: none;
+    font-size: 1rem;
+    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    width: fit-content;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+button:hover {
+    transition: 0.25s;
+    background-color: var(--general-highlight);
+}
+
+button.active {
+    transition: 0.25s;
+    background-color: var(--accent-default);
+    /* box-shadow: 0.25rem 0.25rem 0rem var(--accent-dark); */
+    box-shadow: 0.15rem 0.15rem 0rem var(--accent-dark);
+}
+
+button.round {
+    border-radius: 50%;
+    padding: 0rem;
+    width: 2rem;
+    aspect-ratio: 1;
+}
+
+button.square {
+    border-radius: var(--roundness);
+    padding: 0rem;
+    width: 2rem;
+    aspect-ratio: 1;
+}
+
+button, button * {
+    user-select: none;
+    cursor: pointer;
+}

@@ -1,11 +1,11 @@
-import { addButton } from "./button.js";
+import { createButton } from "./button.js";
 
 export function createSwitch(set = (value) => {}, options = ['a', 'b', 'c', 'd'], def = 'a', name, unselectable = false) {
     const element_base = document.createElement("div");
     element_base.className = "switch";
 
     options.forEach((name, index) => {
-        const element_button = addButton(element_base, function() {
+        const element_button = createButton(function() {
             if (this.classList.contains('active') && unselectable) {
                 element_base.childNodes.forEach((el) => {el.classList.remove("active")});
                 set(null);
@@ -15,6 +15,7 @@ export function createSwitch(set = (value) => {}, options = ['a', 'b', 'c', 'd']
                 set(index);
             }
         }, name);
+        element_base.appendChild(element_button);
         if (name === def)
             element_button.classList.add("active");
     });

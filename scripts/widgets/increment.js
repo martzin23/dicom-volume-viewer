@@ -31,7 +31,7 @@ export function createIncrement(set = (value) => {}, get = () => 0.0, name = "In
     element_base.appendChild(element_increment);
     element_base.appendChild(element_decrement);
     element_base.appendChild(element_name);
-    element_base.className = "incrementer";
+    element_base.className = "increment";
 
     element_text.addEventListener("focusout", function() {
         if (this.checkValidity()) {

@@ -1,0 +1,41 @@
+
+*[tooltip] {
+    position: relative;
+}
+
+*[tooltip]:hover::after {
+    content: attr(tooltip);
+
+    position: absolute;
+    left: 0rem;
+    bottom: calc(100% + 0.5rem);
+    z-index: 100;
+
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: var(--roundness);
+    background-color: var(--background-light);
+    box-shadow: 0.25rem 0.25rem 0rem var(--shadow);
+    border: 1px solid var(--accent-default);
+
+    opacity: 0%;
+    animation-name: appear-delayed;
+    animation-duration: 1.5s;
+    animation-fill-mode: forwards;
+}
+
+figure>*[tooltip]:hover::after {
+    width: max-content;
+    max-width: 25rem;
+}
+
+@keyframes appear-delayed {
+    0% {
+        opacity: 0%;
+    }
+    75% {
+        opacity: 0%;
+    }
+    100% {
+        opacity: 100%;
+    }
+}
