@@ -5,9 +5,3 @@ export function createButton(set = () => {}, name = "Button") {
     element_base.addEventListener("click", set);
     return element_base;
 }
-
-export function addButton(parent, set = () => {}, name = "Button") {
-    const button = createButton(set, name);
-    parent.appendChild(button);
-    return button;
-}

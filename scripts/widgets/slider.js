@@ -71,9 +71,3 @@ export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slide
     
     return element_base;
 }
-
-export function addSlider(parent, set = (value) => {}, get = () => 0.0, name = "Slider", min = 0, max = 1, log = false) {
-    const slider = createSlider(set, get, name, min, max, log);
-    parent.appendChild(slider);
-    return slider;
-}

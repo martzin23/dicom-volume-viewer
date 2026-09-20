@@ -63,10 +63,3 @@ export function createDrag(set = (value) => {}, get = () => 0.0, name = "Drag", 
 
     return element_base;
 }
-
-
-export function addDrag(parent, set = (value) => {}, get = () => 0.0, name = "Drag", min = -Infinity, max = Infinity, sen = 0.01) {
-    const drag = createDrag(set, get, name, min, max, sen);
-    parent.appendChild(drag);
-    return drag;
-}

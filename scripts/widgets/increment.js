@@ -65,9 +65,3 @@ export function createIncrement(set = (value) => {}, get = () => 0.0, name = "In
     
     return element_base;
 }
-
-export function addIncrement(parent, set = (value) => {}, get = () => 0.0, name = "Increment", min = -Infinity, max = Infinity, step = 1, multiply = false) {
-    const increment = createIncrement(set, get, name, min, max, step, multiply);
-    parent.appendChild(increment);
-    return increment;
-}

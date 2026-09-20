@@ -5,9 +5,3 @@ export function createComment(comment) {
 
     return element_comment;
 }
-
-export function addComment(parent, comment) {
-    const element_comment = createComment(comment);
-    parent.appendChild(element_comment);
-    return element_comment;
-}

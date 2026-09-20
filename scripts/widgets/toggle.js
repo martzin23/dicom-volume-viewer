@@ -39,10 +39,3 @@ export function createToggle(set = (bool) => {}, get = () => false, name = "Togg
     
     return element_base;
 }
-
-
-export function addToggle(parent, set = (bool) => {}, get = () => false, name = "Toggle") {
-    const toggle = createToggle(set, get, name);
-    parent.appendChild(toggle);
-    return toggle;
-}

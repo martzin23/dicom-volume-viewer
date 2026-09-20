@@ -46,9 +46,3 @@ export function switchSetIndex(element_switch, active_index) {
             element.classList.remove("active");
     });
 }
-
-export function addSwitch(parent, set = (value) => {}, options = ['a', 'b', 'c', 'd'], def = 'a', name, unselectable = false) {
-    const switch_element = createSwitch(set, options, def, name, unselectable);
-    parent.appendChild(switch_element);
-    return switch_element;
-}
