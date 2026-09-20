@@ -33,8 +33,10 @@ a:empty {
 }
 
 hr {
-    border: calc(var(--thickness) / 2) solid var(--general-default);
+    border: 0.25rem solid var(--general-default);
     border-radius: var(--roundness);
+    width: 100%;
+    height: 0px;
 }
 
 input {

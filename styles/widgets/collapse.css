@@ -18,6 +18,6 @@
 .collapse>*:first-child {
     display: flex;
     flex-direction: row;
-    align-content: center;
+    align-items: center;
     gap: 1rem;
 }

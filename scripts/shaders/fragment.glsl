@@ -20,6 +20,12 @@ layout(std140) uniform UniformBlock {
     float strength;
     float focus;
     float slope;
+
+    vec3 slice_width;
+    float padding_a;
+
+    vec3 slice_offset;
+    float padding_b;
 } uniforms;
 
 struct Ray {
@@ -113,11 +119,13 @@ vec3 getDensity(vec3 position) {
     float value = texture(volume_texture, coordinate).r;
     // return vec3(uniforms.strength * pow(value, uniforms.gamma));
 
+    vec3 slice = clamp(sign(-abs((coordinate - uniforms.slice_offset) / uniforms.slice_width) + 0.5), 0.0, 1.0);
+
     float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
     float smoothness = max(uniforms.slope, 0.0001);
     float e = 2.71828;
     float diff = normalized - uniforms.focus;
     float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
     vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 1.0, 1.0), focused * 2.0 - 1.0);
-    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
+    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color * slice.x * slice.y * slice.z;
 }

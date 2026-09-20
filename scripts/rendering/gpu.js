@@ -54,6 +54,12 @@ export default class WebGLManager {
             strength: 0.01,
             focus: 1.0,
             slope: 0.0,
+
+            slice_width: new Vector3D(1.0, 1.0, 1.0),
+            padding_a: 0.0,
+
+            slice_offset: new Vector3D(0.5, 0.5, 0.5),
+            padding_b: 0.0,
         };
 
         const vertices = new Float32Array([

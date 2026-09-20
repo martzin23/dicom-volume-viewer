@@ -166,5 +166,14 @@ export default class GUIManager {
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
         menu.appendChild(group_transform);
+
+        const group_slice = createCollapse("Slice");
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.x = value;}, () => gpu.uniforms.slice_width.x, "slice width x", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.y = value;}, () => gpu.uniforms.slice_width.y, "slice width y", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.z = value;}, () => gpu.uniforms.slice_width.z, "slice width z", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.x = value;}, () => gpu.uniforms.slice_offset.x, "slice offset x", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.y = value;}, () => gpu.uniforms.slice_offset.y, "slice offset y", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.z = value;}, () => gpu.uniforms.slice_offset.z, "slice offset z", 0, Infinity, 0.001));
+        menu.appendChild(group_slice);
     }
 }

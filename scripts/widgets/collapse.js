@@ -12,8 +12,11 @@ export function createCollapse(name = "Collapse", default_state = false) {
     const element_title = document.createElement("p");
     element_title.innerText = name;
 
+    const element_hr = document.createElement("hr");
+
     const element_button = document.createElement("div");
     element_button.appendChild(element_icon);
+    element_button.appendChild(element_hr);
     element_button.appendChild(element_title);
     element_button.addEventListener("click", (event) => {
         if (state) {
