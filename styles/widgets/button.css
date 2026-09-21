@@ -5,6 +5,7 @@ button {
     transition: 0.25s;
     background-color: var(--general-default);
     border-radius: var(--roundness);
+    box-shadow: var(--shadow-highlight), var(--shadow-smooth);
     border: none;
     font-size: 1rem;
     

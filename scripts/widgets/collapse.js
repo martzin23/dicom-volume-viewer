@@ -5,6 +5,9 @@ export function createCollapse(name = "Collapse", default_state = false) {
     element_base.classList.add("collapse");
     if (!state)
         element_base.classList.add("closed");
+    else
+        element_base.classList.toggle("open");
+        
 
     const element_icon = document.createElement("i");
     element_icon.className = state ? "fa fa-chevron-down" : "fa fa-chevron-right";
@@ -20,10 +23,12 @@ export function createCollapse(name = "Collapse", default_state = false) {
     element_button.appendChild(element_title);
     element_button.addEventListener("click", (event) => {
         if (state) {
-            element_base.classList.add("closed");
+            element_base.classList.toggle("closed");
+            element_base.classList.toggle("open");
             element_icon.className = "fa fa-chevron-right";
         } else {
-            element_base.classList.remove("closed");
+            element_base.classList.toggle("closed");
+            element_base.classList.toggle("open");
             element_icon.className = "fa fa-chevron-down";
         }
         state = !state;

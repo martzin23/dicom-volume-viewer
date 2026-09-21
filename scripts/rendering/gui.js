@@ -6,6 +6,7 @@ import { createToggle } from '../widgets/toggle.js';
 import { setupAddTooltip } from '../widgets/tooltip.js';
 import { createCollapse } from "../widgets/collapse.js";
 import * as DICOM from "../utility/dicom_parser.js";
+import Vector3D from '../math/vector3d.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -144,6 +145,8 @@ export default class GUIManager {
             const files = event.target.files;
             const volume = await DICOM.loadVolumeExample(files);
             gpu.reloadImage(volume);
+            camera.position = new Vector3D(volume.columns, volume.columns, volume.columns);
+            camera.updateOrbit();
         });
         group_file.appendChild(element_input);
         menu.appendChild(group_file);

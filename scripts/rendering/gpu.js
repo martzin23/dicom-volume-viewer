@@ -50,10 +50,10 @@ export default class WebGLManager {
             grid_stretch: new Vector3D(1.0, this.volume_texture.width / this.volume_texture.height, this.volume_texture.width / this.volume_texture.depth),
             grid_scale: 1.0,
 
-            gamma: 1.0,
+            gamma: 2.0,
             strength: 0.01,
-            focus: 1.0,
-            slope: 0.0,
+            focus: 0.25,
+            slope: 0.1,
 
             slice_width: new Vector3D(1.0, 1.0, 1.0),
             padding_a: 0.0,

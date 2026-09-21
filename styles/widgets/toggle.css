@@ -11,6 +11,7 @@
     transition: 0.25s;
     border-radius: var(--roundness);
     background-color: var(--general-dark);
+    box-shadow: var(--shadow-inset);
     width: 4rem;
     height: 2rem;
 
@@ -29,7 +30,9 @@
     height: 100%;
     aspect-ratio: 1;
     border-radius: var(--roundness);
+
     background-color: var(--general-default);
+    box-shadow: var(--shadow-highlight);
 }
 
 .boolean:hover>* {

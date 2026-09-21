@@ -4,20 +4,89 @@
     display: flex;
     flex-direction: column;
     align-content: center;
-    gap: 0.5rem;
 
-    padding: 1rem;
-    /* background-color: #ffffff20; */
+    box-shadow: var(--shadow-highlight);
+    background-color: var(--general-default);
+
     border-radius: var(--roundness);
+    padding-bottom: 1rem;
+}
+
+.collapse.closed {
+    padding: 0rem;
 }
 
 .collapse.closed>* {
     display: none;
+    padding: 0rem;
+}
+
+.collapse>* {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0rem;
 }
 
 .collapse>*:first-child {
+    transition: 0.5s background-color;
+
     display: flex;
     flex-direction: row;
     align-items: center;
+
     gap: 1rem;
+    padding: 1rem;
+    margin: 0rem;
+    margin-bottom: 0.5rem;
+
+    background-color: var(--accent-dark);
+    box-shadow: var(--shadow-highlight);
+    border-top-left-radius: var(--roundness);
+    border-top-right-radius: var(--roundness);
+}
+
+.collapse.closed>*:first-child {
+    margin: 0rem;
+    border-radius: var(--roundness);
+}
+
+.collapse>*:first-child:hover {
+    transition: 0.5s background-color;
+    cursor: pointer;
+    background-color: var(--accent-default);
+}
+
+.collapse>*:first-child>hr {
+    border-color: var(--text-default);
+}
+
+.collapse.closed>*:first-child>hr {
+    animation: test 0.5s forwards;
+}
+
+.collapse.open>*:first-child>hr {
+    animation: test2 0.5s forwards;
+}
+
+.collapse>*:first-child>* {
+    color: var(--text-default);
+}
+
+@keyframes test {
+    0% {
+        width: 100%;
+    }
+    100% {
+        width: 0%;
+    }
+}
+
+@keyframes test2 {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
 }

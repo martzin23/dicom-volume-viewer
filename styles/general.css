@@ -33,7 +33,7 @@ a:empty {
 }
 
 hr {
-    border: 0.25rem solid var(--general-default);
+    border: 0.1rem solid var(--general-default);
     border-radius: var(--roundness);
     width: 100%;
     height: 0px;
@@ -46,6 +46,7 @@ input {
 input[type="text"] {
     background-color: var(--general-dark);
     border-radius: var(--roundness);
+    box-shadow: var(--shadow-inset);
     border: none;
     padding: 0.5rem 0.751rem 0.5rem 0.75rem;
     width: 6rem;
@@ -77,7 +78,6 @@ input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0rem;
 }
 
-
 input[type="file"]::file-selector-button {
     transition: 0.25s;
     background-color: var(--general-default);
@@ -85,6 +85,7 @@ input[type="file"]::file-selector-button {
     border: none;
     padding: 0.5rem 1rem 0.5rem 1rem;
     color: var(--text-default);
+    box-shadow: var(--shadow-highlight);
     font-size: 1rem;
 }
 input[type="file"]::file-selector-button:hover {
@@ -98,6 +99,7 @@ input[type="file"]::file-selector-button:hover {
 .value {
     background-color: var(--general-dark);
     border-radius: var(--roundness);
+    box-shadow: var(--shadow-inset);
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-family: monospace;
     width: max-content;
