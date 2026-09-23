@@ -21,11 +21,13 @@ layout(std140) uniform UniformBlock {
     float focus;
     float slope;
 
-    vec3 slice_width;
-    float padding_a;
+    vec2 slice_forward;
+    vec2 slice_side;
 
-    vec3 slice_offset;
+    vec2 slice_up;
+    float padding_a;
     float padding_b;
+
 } uniforms;
 
 struct Ray {
@@ -60,7 +62,9 @@ void main() {
 
 vec3 traverse(Ray ray) {
     vec3 density = vec3(0.0);
-    vec2 bbox_t = intersect(ray, vec3(0.0), uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
+    vec3 slice_start = floor(vec3(vec3(uniforms.slice_forward.x, uniforms.slice_side.x, uniforms.slice_up.x) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec3 slice_end = floor(vec3(vec3(uniforms.slice_forward.y, uniforms.slice_side.y, uniforms.slice_up.y) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec2 bbox_t = intersect(ray, slice_start, slice_end);
     if (bbox_t.x > bbox_t.y)
         return vec3(0.0);
 
@@ -69,7 +73,6 @@ vec3 traverse(Ray ray) {
     vec3 delta = (ray.inverse) * march;
     vec3 select = march * 0.5 + 0.5;
     vec3 planes = position + select;
-    vec3 limit = floor(uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
     vec3 t = (planes - ray.origin) * ray.inverse;
 
     density += getDensity(position);
@@ -96,7 +99,7 @@ vec3 traverse(Ray ray) {
         }
         density += getDensity(position);
 
-        if (position.x > limit.x || position.x < 0.0 || position.y > limit.y || position.y < 0.0 || position.z > limit.z || position.z < 0.0)
+        if (position.x > slice_end.x || position.x < slice_start.x || position.y > slice_end.y || position.y < slice_start.y || position.z > slice_end.z || position.z < slice_start.z)
             return density;
     }
 
@@ -119,13 +122,11 @@ vec3 getDensity(vec3 position) {
     float value = texture(volume_texture, coordinate).r;
     // return vec3(uniforms.strength * pow(value, uniforms.gamma));
 
-    vec3 slice = clamp(sign(-abs((coordinate - uniforms.slice_offset) / uniforms.slice_width) + 0.5), 0.0, 1.0);
-
     float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
     float smoothness = max(uniforms.slope, 0.0001);
     float e = 2.71828;
     float diff = normalized - uniforms.focus;
     float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
     vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 1.0, 1.0), focused * 2.0 - 1.0);
-    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color * slice.x * slice.y * slice.z;
+    return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
 }

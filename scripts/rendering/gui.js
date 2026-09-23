@@ -143,7 +143,8 @@ export default class GUIManager {
         element_input.setAttribute("multiple", true);
         element_input.addEventListener("change", async (event) => {
             const files = event.target.files;
-            const volume = await DICOM.loadVolumeExample(files);
+            const volume = await DICOM.dicomToVolume(files);
+            // const volume = await DICOM.dicomdirToVolume(files);
             gpu.reloadImage(volume);
             camera.position = new Vector3D(volume.columns, volume.columns, volume.columns);
             camera.updateOrbit();
@@ -171,12 +172,14 @@ export default class GUIManager {
         menu.appendChild(group_transform);
 
         const group_slice = createCollapse("Slice");
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.x = value;}, () => gpu.uniforms.slice_width.x, "slice width x", 0, Infinity, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.y = value;}, () => gpu.uniforms.slice_width.y, "slice width y", 0, Infinity, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_width.z = value;}, () => gpu.uniforms.slice_width.z, "slice width z", 0, Infinity, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.x = value;}, () => gpu.uniforms.slice_offset.x, "slice offset x", 0, Infinity, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.y = value;}, () => gpu.uniforms.slice_offset.y, "slice offset y", 0, Infinity, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_offset.z = value;}, () => gpu.uniforms.slice_offset.z, "slice offset z", 0, Infinity, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_forward.x = value;}, () => gpu.uniforms.slice_forward.x, "slice forward min", 0, 1, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_forward.y = value;}, () => gpu.uniforms.slice_forward.y, "slice forward max", 0, 1, 0.001));
+
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_side.x = value;}, () => gpu.uniforms.slice_side.x, "slice side min", 0, 1, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_side.y = value;}, () => gpu.uniforms.slice_side.y, "slice side max", 0, 1, 0.001));
+        
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.x = value;}, () => gpu.uniforms.slice_up.x, "slice up min", 0, 1, 0.001));
+        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.y = value;}, () => gpu.uniforms.slice_up.y, "slice up max", 0, 1, 0.001));
         menu.appendChild(group_slice);
     }
 }

@@ -55,10 +55,12 @@ export default class WebGLManager {
             focus: 0.25,
             slope: 0.1,
 
-            slice_width: new Vector3D(1.0, 1.0, 1.0),
-            padding_a: 0.0,
+            
+            slice_forward: new Vector2D(0.0, 1.0),
+            slice_side: new Vector2D(0.0, 1.0),
 
-            slice_offset: new Vector3D(0.5, 0.5, 0.5),
+            slice_up: new Vector2D(0.0, 1.0),
+            padding_a: 0.0,
             padding_b: 0.0,
         };
 

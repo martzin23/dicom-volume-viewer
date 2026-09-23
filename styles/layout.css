@@ -27,7 +27,7 @@ main {
 
 canvas {
     width: calc(100% - 1rem);
-    height: calc(100% - 2rem);
+    height: calc(100% - 1rem);
 
     border-radius: var(--roundness);
     box-shadow: var(--shadow-smooth), var(--shadow-sharp), var(--shadow-highlight);
