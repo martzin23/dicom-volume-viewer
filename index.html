@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -18,7 +19,9 @@
 	<link rel="stylesheet" href="./styles/layout.css">
 	<link rel="stylesheet" href="./styles/flex.css">
 	<link rel="stylesheet" href="./styles/variables.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+		integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<script type="module" defer src="./scripts/rendering/engine.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/dicom-parser@1.8.21/dist/dicomParser.min.js"></script>
 </head>
@@ -35,13 +38,13 @@
 	</menu>
 
 	<main>
-		<canvas id="canvas"\>
+		<canvas id="canvas" \>
 	</main>
 
 	<div class="popup hidden" onclick="this.classList.add('hidden')" id="popup-error">
 		<div>
 			<div class="row">
-				<i class="fa fa-times"></i>		
+				<i class="fa fa-times"></i>
 				<p>Error</p>
 			</div>
 			<p id="output-fail">This device does not support WebGL!</p>
@@ -52,4 +55,5 @@
 		</div>
 	</div>
 </body>
+
 </html>

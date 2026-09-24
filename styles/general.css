@@ -4,7 +4,7 @@
 * {
     box-sizing: border-box;
     margin: 0rem;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-family: Cambay;
     user-select: none;
     color: var(--text-default);
     
@@ -12,6 +12,11 @@
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+}
+
+@font-face {
+    font-family: Cambay;
+    src: url(../assets/fonts/Cambay-Regular.ttf);
 }
 
 a {
