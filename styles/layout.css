@@ -20,7 +20,7 @@ main {
     align-items: center;
     
     padding: 1rem;
-    background: radial-gradient(circle,rgba(63, 110, 251, 0.31) 0%, rgba(255, 255, 255, 0) 60%);
+    background: radial-gradient(circle, var(--accent-dark) 0%, #ffffff00 60%);
     /* background: radial-gradient(at 67% 79%, #64FFDA, transparent 70%), radial-gradient(at 16% 50%, #7C4DFF, transparent 70%), radial-gradient(at 67% 21%, #18FFFF, transparent 70%), #0A1F2E; */
     /* background: radial-gradient(at center bottom, #ABF5F442 0%, #01010100 100%); */
 }

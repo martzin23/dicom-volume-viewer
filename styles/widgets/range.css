@@ -1,0 +1,54 @@
+
+.range>.range-container {
+    /* height: 0px; */
+    height: 1rem;
+    width: 8rem;
+
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    /* border: 0.25rem solid var(--highlight); */
+    background-color: var(--transluscent);
+    box-shadow: var(--shadow-inset);
+    border-radius: var(--roundness);
+}
+
+.range>.range-container>*:nth-child(1), .range>.range-container>*:nth-child(3) {
+    width: 1rem;
+    height: 1rem;
+
+    border-radius: var(--roundness);
+    background-color: var(--general-default);
+    box-shadow: var(--shadow-highlight);
+}
+
+.range>.range-container>*:nth-child(1) {
+    position: absolute;
+    left: 0px;
+}
+
+.range>.range-container>*:nth-child(3) {
+    position: absolute;
+    left: calc(100% - 1rem);
+}
+
+.range>.range-container>*:nth-child(2) {
+    width: 1rem;
+    height: 0.5rem;
+
+    position: absolute;
+    left: 50%;
+
+    border-radius: var(--roundness);
+    background-color: var(--general-default);
+    box-shadow: var(--shadow-highlight), var(--shadow-smooth);
+    transition: 0.5s background-color;
+}
+
+.range>.range-container>*:hover {
+    background-color: var(--general-highlight);
+    transition: 0.5s background-color;
+    cursor: pointer;
+}

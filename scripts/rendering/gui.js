@@ -7,6 +7,7 @@ import { setupAddTooltip } from '../widgets/tooltip.js';
 import { createCollapse } from "../widgets/collapse.js";
 import * as DICOM from "../utility/dicom_parser.js";
 import Vector3D from '../math/vector3d.js';
+import { createRange } from '../widgets/range.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -180,6 +181,8 @@ export default class GUIManager {
         
         group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.x = value;}, () => gpu.uniforms.slice_up.x, "slice up min", 0, 1, 0.001));
         group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.y = value;}, () => gpu.uniforms.slice_up.y, "slice up max", 0, 1, 0.001));
+
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_up = value;}, () => gpu.uniforms.slice_up, "Slice Up", 0, 1));
         menu.appendChild(group_slice);
     }
 }

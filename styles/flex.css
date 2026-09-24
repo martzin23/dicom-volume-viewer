@@ -116,3 +116,11 @@
 .hidden {
     display: none;
 }
+
+.wide {
+    width: 100%;
+}
+
+.tall {
+    height: 100%;
+}

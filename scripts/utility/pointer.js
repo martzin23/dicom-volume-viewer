@@ -134,3 +134,29 @@ export function addTouchListener(element, callback) {
         element.removeEventListener('touchcancel', handleTouchEnd);
     };
 }
+
+export function addMoveListener(element, callback) {
+    let previous_x = undefined;
+    let previous_y = undefined;
+
+    const mousemove_handler = (event) => {
+        if (!previous_x || !previous_y) {
+            previous_x = event.clientX;
+            previous_y = event.clientY;
+        }
+
+        callback({
+            delta_x: previous_x - event.clientX,
+            delta_y: previous_y - event.clientY
+        });
+
+        previous_x = event.clientX;
+        previous_y = event.clientY;
+    }
+
+    element.addEventListener("mousemove", mousemove_handler);
+
+    return function removeMoveListener() {
+        element.removeEventListener("mousemove", mousemove_handler);
+    }
+}

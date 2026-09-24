@@ -6,9 +6,9 @@
 }
 
 :root {
-    --general-highlight: #ffffff40;
-    --general-default: #ffffff20;
-    --general-dark: #0d0d0d80;
+    --general-highlight: #d1cece;
+    --general-default: #646464;
+    --general-dark: #3d3d3d;
 
     --text-default: #ffffff;
     --text-muted: #aaaaaa;
@@ -19,8 +19,8 @@
     --background-light: #252933;
     --background-dark: #1a192c;
 
-    --accent-default: #1e777d;
-    --accent-dark: #173c3f;
+    --accent-default: #1e5c7d;
+    --accent-dark: #254760;
 
     --error-default: #cf3173;
     --error-dark: #3b1826;
