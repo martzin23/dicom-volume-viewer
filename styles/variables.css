@@ -16,9 +16,9 @@
     --background-light: oklch(28% 0.0 268);
     --background-dark: oklab(22% 0.007 -0.03);
 
-    --accent-light: oklch(65% 0.1 236);
-    --accent-default: oklch(45% 0.05 236);
-    --accent-dark: oklch(38% 0.03 242);
+    --accent-light: oklch(65% 0.04 236);
+    --accent-default: oklch(45% 0.03 236);
+    --accent-dark: oklch(38% 0.02 242);
 
     --error-default: #cf3173;
     --error-dark: #3b1826;
@@ -34,9 +34,10 @@
 
     --shadow-highlight: inset 0px 1px 0px var(--highlight), inset 0px -1px 0px var(--darken);
     --shadow-accent: inset 0px 1px 0px var(--accent-default);
-    --shadow-smooth: 0px 0px 5px #00000040, 0px 0px 2rem #00000020;
+    --shadow-smooth: 0px 0px 4px #00000040, 0px 1rem 1rem #00000020;
     --shadow-inset: inset 0px 0px 5px #00000080, inset 0px 0px 2rem #00000040, inset 0px -1px 0px var(--highlight);
     --shadow-sharp: 0.25rem 0.25rem 0px var(--shadow);
+    --shadow-glow: 0rem 0rem 0.5rem var(--accent-default);
 }
 
 @media screen and (max-width: 768px) {

@@ -5,6 +5,9 @@ body {
     background: linear-gradient(0deg, var(--background-dark) 0%, var(--background-light) 100%);
     box-shadow: 0rem 0rem 0.5rem var(--shadow) inset;
 
+    animation-name: test;
+    animation-duration: 1s;
+
     display: grid;
     grid-template-areas: 'm c';
     grid-template-columns: 30rem 1fr;
@@ -20,6 +23,15 @@ main {grid-area: c;}
         grid-template-areas: 'c' 'm';
         grid-template-columns: 1fr;
         grid-template-rows: 2fr 1fr;
+    }
+}
+
+@keyframes test {
+    0% {
+        background-position: 50% 50%;
+    }
+    100% {
+        background-position: 0% 0%;
     }
 }
 
@@ -57,6 +69,11 @@ aside {
 
     overflow-y: auto;
     scrollbar-color: var(--highlight) #00000000;
+
+    background-image: url(../assets/images/dither.png);
+    background-blend-mode: darken;
+    background-size: 4px;
+    image-rendering: optimizeSpeed;
 
     background-color: var(--transluscent);
     box-shadow: var(--shadow-smooth);

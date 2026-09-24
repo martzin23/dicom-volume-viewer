@@ -49,7 +49,7 @@ input {
 }
 
 input[type="text"] {
-    background-color: var(--general-dark);
+    background-color: var(--transluscent);
     border-radius: var(--roundness);
     box-shadow: var(--shadow-inset);
     border: none;

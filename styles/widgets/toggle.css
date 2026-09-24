@@ -10,7 +10,7 @@
 .boolean {
     transition: 0.25s;
     border-radius: var(--roundness);
-    background-color: var(--general-dark);
+    background-color: var(--transluscent);
     box-shadow: var(--shadow-inset);
     width: 4rem;
     height: 2rem;
