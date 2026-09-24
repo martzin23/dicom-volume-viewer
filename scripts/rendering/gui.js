@@ -105,12 +105,12 @@ export default class GUIManager {
             switch (event.key) {
                 case "ArrowUp":
                     if (this.isTyping()) return;
-                    gpu.uniforms.render_scale = Math.max(gpu.uniforms.render_scale - 1, 1);
+                    gpu.uniforms.render_scale = Math.min(gpu.uniforms.render_scale * 2, 1.0);
                     gpu.synchronize();
                     break;
                 case "ArrowDown":
                     if (this.isTyping()) return;
-                    gpu.uniforms.render_scale = Math.min(gpu.uniforms.render_scale + 1, 16);
+                    gpu.uniforms.render_scale = Math.max(gpu.uniforms.render_scale / 2, 0.1);
                     gpu.synchronize();
                     break;
                 case "F11":
@@ -138,7 +138,7 @@ export default class GUIManager {
 
         const menu = document.getElementById("menu");
 
-        const group_general = createCollapse("General", true);
+        const group_general = createCollapse("General", "fa-gear", true);
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -162,14 +162,14 @@ export default class GUIManager {
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
         menu.appendChild(group_general);
         
-        const group_transform = createCollapse("Transform");
+        const group_transform = createCollapse("Transform", "fa-area-chart");
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
         menu.appendChild(group_transform);
 
-        const group_slice = createCollapse("Slice");
+        const group_slice = createCollapse("Slice", "fa-cube");
         group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_up = value;}, () => gpu.uniforms.slice_up, "Slice Up", 0, 1));
         group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_forward = value;}, () => gpu.uniforms.slice_forward, "Slice Forward", 0, 1));
         group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_side = value;}, () => gpu.uniforms.slice_side, "Slice Side", 0, 1));
