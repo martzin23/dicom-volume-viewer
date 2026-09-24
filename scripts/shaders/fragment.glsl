@@ -51,7 +51,7 @@ void main() {
     Ray camera_ray;
     camera_ray.origin = uniforms.camera_position;
     camera_ray.origin *= uniforms.grid_scale;
-    camera_ray.origin += uniforms.grid_size * vec3(0.5, 0.5, 0.5) * uniforms.grid_scale * uniforms.grid_stretch;
+    camera_ray.origin += (vec3(uniforms.slice_side.y, uniforms.slice_forward.y, uniforms.slice_up.y) + vec3(uniforms.slice_side.x, uniforms.slice_forward.x, uniforms.slice_up.x)) * (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch * vec3(0.5));
     camera_ray.direction = (uniforms.camera_rotation * vec4(normalize(vec3(centered_coordinates.x * uniforms.fov, 1.0, centered_coordinates.y * uniforms.fov)), 1.0)).xyz;
     camera_ray.inverse = 1.0 / camera_ray.direction;
 
