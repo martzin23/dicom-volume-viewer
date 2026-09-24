@@ -54,10 +54,10 @@
 /* --- */
 
 :root {
---track-color: #38383f;
---range-color: #818cf8;
---thumb-color: #1f1f28;
---thumb-border: #818cf8;
+--track-color: var(--general-default);
+--range-color: var(--accent-light);
+--thumb-color: var(--general-dark);
+--thumb-border: var(--accent-light);
 }
 
 .range>.range-container {

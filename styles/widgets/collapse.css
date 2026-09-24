@@ -6,7 +6,8 @@
     align-content: center;
 
     box-shadow: var(--shadow-highlight);
-    background-color: var(--general-default);
+    background-color: var(--highlight);
+    background: linear-gradient(-15deg, #00000000 -20%, var(--general-dark) 100%);
 
     border-radius: var(--roundness);
     padding-bottom: 1rem;
@@ -29,18 +30,19 @@
 }
 
 .collapse>*:first-child {
-    transition: 0.5s background-color;
+    transition: 0.5s filter;
 
     display: flex;
     flex-direction: row;
     align-items: center;
 
     gap: 1rem;
-    padding: 1rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     margin: 0rem;
     margin-bottom: 0.5rem;
 
-    background-color: var(--accent-dark);
+    /* background-color: var(--accent-dark); */
+    background: linear-gradient(-45deg, var(--accent-dark) 0%, var(--accent-default) 100%);
     box-shadow: var(--shadow-highlight);
     border-top-left-radius: var(--roundness);
     border-top-right-radius: var(--roundness);
@@ -52,9 +54,9 @@
 }
 
 .collapse>*:first-child:hover {
-    transition: 0.5s background-color;
+    transition: 0.5s filter;
     cursor: pointer;
-    background-color: var(--accent-default);
+    filter: brightness(140%) hue-rotate(-10deg) saturate(120%);
 }
 
 .collapse>*:first-child>hr {

@@ -62,8 +62,8 @@ void main() {
 
 vec3 traverse(Ray ray) {
     vec3 density = vec3(0.0);
-    vec3 slice_start = floor(vec3(vec3(uniforms.slice_forward.x, uniforms.slice_side.x, uniforms.slice_up.x) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
-    vec3 slice_end = floor(vec3(vec3(uniforms.slice_forward.y, uniforms.slice_side.y, uniforms.slice_up.y) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec3 slice_start = floor(vec3(vec3(uniforms.slice_side.x, uniforms.slice_forward.x, uniforms.slice_up.x) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec3 slice_end = floor(vec3(vec3(uniforms.slice_side.y, uniforms.slice_forward.y, uniforms.slice_up.y) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
     vec2 bbox_t = intersect(ray, slice_start, slice_end);
     if (bbox_t.x > bbox_t.y)
         return vec3(0.0);

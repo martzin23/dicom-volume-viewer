@@ -8,8 +8,8 @@ import Vector3D from '../math/vector3d.js';
 class Engine {
     static async initialize() {
         window.addEventListener("error", (event) => {
-            document.getElementById("popup-error").classList.remove("hidden");
-            document.getElementById("output-fail").innerText = event.error;
+            document.getElementById("popup").classList.remove("hidden");
+            document.getElementById("popup-message").innerText = event.error;
         });
         const gpu = await WebGLManager.initialize(document.getElementById("canvas"));
         return new Engine(gpu);

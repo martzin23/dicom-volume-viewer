@@ -54,7 +54,7 @@ export function createRange(
 	element_name.innerText = name;
 
 	const element_base = document.createElement("div");
-	element_base.className = "range row gap-medium align-center";
+	element_base.className = "range row gap-small align-center";
 	element_base.appendChild(element_text_min);
 	element_base.appendChild(element_range_container);
 	element_base.appendChild(element_text_max);

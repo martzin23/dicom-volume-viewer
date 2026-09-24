@@ -99,10 +99,8 @@ input[type="file"]::file-selector-button:hover {
     cursor: pointer;
 }
 
-/* ----------------------------------------- */
-
-.value {
-    background-color: var(--general-dark);
+samp {
+    background-color: var(--transluscent);
     border-radius: var(--roundness);
     box-shadow: var(--shadow-inset);
     padding: 0.5rem 1rem 0.5rem 1rem;
@@ -111,71 +109,3 @@ input[type="file"]::file-selector-button:hover {
 }
 
 /* ----------------------------------------- */
-
-.popup {
-    position: absolute;
-    top: 0%;
-    left: 0%;
-    width: 100vw;
-    height: 100vh;
-    background-color: var(--transluscent);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup.hidden {
-    display: none;
-}
-
-.popup>div {
-    border-radius: var(--roundness);
-    background: linear-gradient(0deg, var(--error-dark) 0%, var(--background-light) 100%);
-    box-shadow: 0.25rem 0.25rem 0rem var(--shadow);
-
-    max-width: calc(100vw - var(--spacing) * 2);
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    gap: 1rem;
-}
-
-.popup .row {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.popup .row i {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-
-    background-color: var(--error-default);
-    box-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.popup .row p {
-    color: var(--error-default);
-    text-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
-}
-
-.popup>div>p {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.popup .button {
-    align-self: flex-end;
-}

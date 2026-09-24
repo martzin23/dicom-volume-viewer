@@ -1,0 +1,88 @@
+
+.popup {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: var(--transluscent);
+    border-radius: 0rem;
+    box-shadow: none;
+    backdrop-filter: blur(4px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing);
+}
+
+.popup.hidden {
+    display: none;
+}
+
+.popup>div {
+    border-radius: var(--roundness);
+    background: linear-gradient(0deg, var(--error-dark) 0%, var(--background-light) 100%);
+    box-shadow: var(--shadow-sharp), var(--shadow-smooth);
+
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.popup header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.popup header i {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+
+    background-color: var(--error-default);
+    box-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup header p {
+    color: var(--error-default);
+    text-shadow: 0.25rem 0.25rem 0rem var(--error-dark);
+
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+
+    transform: translate(0%, 10%);
+}
+
+/* --- */
+
+.popup>div {
+    padding: 0rem;
+    padding-bottom: 1rem;
+}
+
+.popup>div>* {
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.popup>div>*:first-child {
+    padding: 1rem;
+    margin: 0rem;
+    background-color: var(--transluscent);
+    border-top-left-radius: var(--roundness);
+    border-top-right-radius: var(--roundness);
+}

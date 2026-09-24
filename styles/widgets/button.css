@@ -3,7 +3,7 @@ button {
     position: relative;
     
     transition: 0.25s;
-    background-color: var(--general-default);
+    background-color: var(--accent-default);
     border-radius: var(--roundness);
     box-shadow: var(--shadow-highlight), var(--shadow-smooth);
     border: none;
@@ -21,14 +21,12 @@ button {
 
 button:hover {
     transition: 0.25s;
-    background-color: var(--general-highlight);
+    filter: brightness(150%);
 }
 
 button.active {
     transition: 0.25s;
     background-color: var(--accent-default);
-    /* box-shadow: 0.25rem 0.25rem 0rem var(--accent-dark); */
-    box-shadow: 0.15rem 0.15rem 0rem var(--accent-dark);
 }
 
 button.round {

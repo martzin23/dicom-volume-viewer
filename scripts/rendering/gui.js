@@ -137,7 +137,7 @@ export default class GUIManager {
 
         const menu = document.getElementById("menu");
 
-        const group_file = createCollapse("File", true);
+        const group_general = createCollapse("General", true);
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -150,20 +150,16 @@ export default class GUIManager {
             camera.position = new Vector3D(volume.columns, volume.columns, volume.columns);
             camera.updateOrbit();
         });
-        group_file.appendChild(element_input);
-        menu.appendChild(group_file);
-
-        const group_display = createCollapse("Display");
-        group_display.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
-        group_display.appendChild(createIncrement((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16));
-        menu.appendChild(group_display);
+        group_general.appendChild(element_input);
         
-        const group_grid = createCollapse("Grid");
-        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
-        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
-        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
-        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
-        menu.appendChild(group_grid);
+        group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
+        group_general.appendChild(createIncrement((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16));
+        
+        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
+        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
+        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
+        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
+        menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform");
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
@@ -173,16 +169,9 @@ export default class GUIManager {
         menu.appendChild(group_transform);
 
         const group_slice = createCollapse("Slice");
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_forward.x = value;}, () => gpu.uniforms.slice_forward.x, "slice forward min", 0, 1, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_forward.y = value;}, () => gpu.uniforms.slice_forward.y, "slice forward max", 0, 1, 0.001));
-
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_side.x = value;}, () => gpu.uniforms.slice_side.x, "slice side min", 0, 1, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_side.y = value;}, () => gpu.uniforms.slice_side.y, "slice side max", 0, 1, 0.001));
-        
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.x = value;}, () => gpu.uniforms.slice_up.x, "slice up min", 0, 1, 0.001));
-        group_slice.appendChild(createDrag((value) => {gpu.uniforms.slice_up.y = value;}, () => gpu.uniforms.slice_up.y, "slice up max", 0, 1, 0.001));
-
         group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_up = value;}, () => gpu.uniforms.slice_up, "Slice Up", 0, 1));
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_forward = value;}, () => gpu.uniforms.slice_forward, "Slice Forward", 0, 1));
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_side = value;}, () => gpu.uniforms.slice_side, "Slice Side", 0, 1));
         menu.appendChild(group_slice);
     }
 }
