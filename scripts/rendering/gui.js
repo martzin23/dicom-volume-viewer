@@ -8,6 +8,7 @@ import { createCollapse } from "../widgets/collapse.js";
 import * as DICOM from "../utility/dicom_parser.js";
 import Vector3D from '../math/vector3d.js';
 import { createRange } from '../widgets/range.js';
+import { createSlider } from '../widgets/slider.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -153,7 +154,7 @@ export default class GUIManager {
         group_general.appendChild(element_input);
         
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
-        group_general.appendChild(createIncrement((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution division", 1, 16));
+        group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1));
         
         group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));

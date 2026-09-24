@@ -114,7 +114,7 @@ export default class WebGLManager {
 
         this.gl.clearColor(1.0, 1.0, 1.0, 1.0);
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        this.gl.viewport(0, 0, this.uniforms.canvas_size.x / this.uniforms.render_scale, this.uniforms.canvas_size.y / this.uniforms.render_scale);
+        this.gl.viewport(0, 0, this.uniforms.canvas_size.x * this.uniforms.render_scale, this.uniforms.canvas_size.y * this.uniforms.render_scale);
 
         this.gl.useProgram(this.program);
         this.gl.enableVertexAttribArray(this.vertex_location);
@@ -127,8 +127,8 @@ export default class WebGLManager {
         const width = Math.min(this.canvas.clientWidth, this.base_render_size.x);
         const height = Math.min(this.canvas.clientHeight, this.base_render_size.y);
         this.uniforms.canvas_size = new Vector2D(width, height);
-        this.canvas.width = width / this.uniforms.render_scale;
-        this.canvas.height = height / this.uniforms.render_scale;
+        this.canvas.width = width * this.uniforms.render_scale;
+        this.canvas.height = height * this.uniforms.render_scale;
     }
 
     reloadImage(volume) {
