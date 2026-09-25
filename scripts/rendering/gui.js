@@ -1,6 +1,5 @@
 import switchAttribute from '../utility/switch_attribute.js';
 import { createDrag } from '../widgets/drag.js';
-import { createIncrement } from '../widgets/increment.js';
 import { switchSetIndex } from '../widgets/switch.js';
 import { createToggle } from '../widgets/toggle.js';
 import { setupAddTooltip } from '../widgets/tooltip.js';
@@ -9,6 +8,8 @@ import * as DICOM from "../utility/dicom_parser.js";
 import Vector3D from '../math/vector3d.js';
 import { createRange } from '../widgets/range.js';
 import { createSlider } from '../widgets/slider.js';
+import { createCurve } from '../widgets/curve.js';
+// import { allDefined } from '/dist/webawesome.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -133,8 +134,9 @@ export default class GUIManager {
         });
     }
 
-    setupWidgets(gpu, camera) {
+    async setupWidgets(gpu, camera) {
         setupAddTooltip();
+        // await allDefined();
 
         const menu = document.getElementById("menu");
 
@@ -167,6 +169,14 @@ export default class GUIManager {
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
+        // group_transform.appendChild(document.createElement("hr"));
+        group_transform.appendChild(createCurve("test", (data) => {
+            console.log(data);
+            data.forEach((element, index) => {
+                gpu.uniforms.map[index] = element;
+            });
+            gpu.uniforms.map_size = data.length;
+        }));
         menu.appendChild(group_transform);
 
         const group_slice = createCollapse("Slice", "fa-cube");

@@ -63,26 +63,6 @@ input[type="text"]:invalid {
     color: var(--error-default);
 }
 
-input[type="color"] {
-    width: 6rem;
-}
-
-input[type="color"] {
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0rem;
-}
-
-input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: var(--roundness); 
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 0rem;
-}
-
 input[type="file"]::file-selector-button {
     transition: 0.25s;
     background-color: var(--general-default);

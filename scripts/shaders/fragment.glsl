@@ -2,6 +2,11 @@
 precision highp float;
 precision highp sampler3D;
 
+struct Point {
+    vec3 value;
+    float factor;
+};
+
 layout(std140) uniform UniformBlock {
     vec2 canvas_size;
     vec2 buffer_size;
@@ -26,8 +31,9 @@ layout(std140) uniform UniformBlock {
 
     vec2 slice_up;
     float padding_a;
-    float padding_b;
+    float map_size;
 
+    Point points[16];
 } uniforms;
 
 struct Ray {

@@ -61,7 +61,9 @@ export default class WebGLManager {
 
             slice_up: new Vector2D(0.0, 1.0),
             padding_a: 0.0,
-            padding_b: 0.0,
+            map_size: 0.0,
+
+            map: Array(16 * 4).fill(0.0),
         };
 
         const vertices = new Float32Array([
