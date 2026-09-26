@@ -63,7 +63,7 @@ export default class WebGLManager {
             padding_a: 0.0,
             map_size: 0.0,
 
-            map: Array(16 * 4).fill(0.0),
+            map: Array(16).fill([0.0, 0.0, 0.0, 0.0]),
         };
 
         const vertices = new Float32Array([
@@ -152,6 +152,8 @@ function packUniforms(data) {
             array.push(value.array());
         else if (value instanceof Matrix)
             array.push(value.array());
+        else if (value instanceof Array)
+            array.push(value.flat());
         else
             array.push(value);
     }

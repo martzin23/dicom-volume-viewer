@@ -33,7 +33,7 @@ layout(std140) uniform UniformBlock {
     float padding_a;
     float map_size;
 
-    Point points[16];
+    Point map[16];
 } uniforms;
 
 struct Ray {
@@ -49,6 +49,7 @@ out vec4 output_color;
 vec3 traverse(Ray ray);
 vec2 intersect(Ray ray, vec3 p_min, vec3 p_max);
 vec3 getDensity(vec3 position);
+vec3 sampleGradient(float factor);
 
 void main() {
     float aspect_ratio = uniforms.canvas_size.y / uniforms.canvas_size.x;
@@ -129,10 +130,30 @@ vec3 getDensity(vec3 position) {
     // return vec3(uniforms.strength * pow(value, uniforms.gamma));
 
     float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
+
+    return sampleGradient(normalized) * uniforms.strength;
+    // return uniforms.map[1].value;
+    // return vec3(1.0, 1.0, 1.0);
+
     float smoothness = max(uniforms.slope, 0.0001);
     float e = 2.71828;
     float diff = normalized - uniforms.focus;
     float focused = pow(e, -(diff * diff) / (smoothness * smoothness * smoothness));
     vec3 color = mix(vec3(0.0, 0.0, 1.0), vec3(1.0, 1.0, 1.0), focused * 2.0 - 1.0);
     return vec3(uniforms.strength * pow(focused, uniforms.gamma)) * color;
+}
+
+vec3 sampleGradient(float factor) {
+    if (factor < uniforms.map[0].factor || factor > uniforms.map[int(uniforms.map_size) - 1].factor || uniforms.map_size < 2.0) return vec3(0.0);
+    int index = 0;
+    for (int i=0; i<int(uniforms.map_size); i++) {
+        if (factor < uniforms.map[i].factor) {
+            index = i - 1;
+            break;
+        }
+    }
+    float blend = (factor - uniforms.map[index].factor) / (uniforms.map[index + 1].factor - uniforms.map[index].factor);
+    vec3 first = uniforms.map[index].value;
+    vec3 second = uniforms.map[index + 1].value;
+    return mix(first, second, clamp(blend, 0.0, 1.0));
 }

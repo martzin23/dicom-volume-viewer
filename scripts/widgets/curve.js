@@ -4,6 +4,7 @@ import { addDoubleTapListener } from "../utility/pointer.js";
 
 export function createCurve(name = "Curve", onInput = (data) => {}) {
     let points = [];
+    let previous_top;
     const element_base = document.createElement("div");
     element_base.className = "curve";
 
@@ -22,11 +23,17 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         if (disabled) element_color.setAttribute("disabled", true);
         element_color.value = value;
         element_color.parent = element_base;
+        previous_top = element_color;
+        element_color.style.zIndex = 2;
         
         const move_handler = function(event) {
             const rect = element_base.getBoundingClientRect();
             element_color.style.left = (event.clientX - rect.left) + "px";
             element_color.style.top = (event.clientY - rect.top) + "px";
+            onInput(element_base.getData());
+            previous_top.style.zIndex = 1;
+            element_color.style.zIndex = 2;
+            previous_top = element_color;
         }
         element_color.addEventListener("pointerdown", (event) => {
             if (element_color.disabled) return;
@@ -42,9 +49,10 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
             onInput(element_base.getData());
         })
         addDoubleTapListener(element_color, () => {
+            console.log(points);
             if (element_color.disabled) return;
             element_base.removeChild(element_color);
-            points.pop(element_color);
+            points.splice(points.indexOf(element_color), 1);
             onInput(element_base.getData());
         });
         element_color.setPosition = (x, y) => {
@@ -61,7 +69,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         return element_color;
     }
 
-    element_base.addEventListener("click", (event) => {
+    element_base.addEventListener("pointerdown", (event) => {
         if (event.target !== element_base) return;
         const rect = element_base.getBoundingClientRect();
         const element_color = createPoint((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
@@ -70,11 +78,11 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         onInput(element_base.getData());
     })
 
-    let temp = createPoint(0.0, 1.0, "#000000", true);
+    let temp = createPoint(0.0, 1.0, "#000000", false);
     element_base.appendChild(temp);
     points.push(temp);
 
-    temp = createPoint(1.0, 1.0, "#000000", true);
+    temp = createPoint(1.0, 1.0, "#000000", false);
     element_base.appendChild(temp);
     points.push(temp);
 

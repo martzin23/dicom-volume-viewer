@@ -10,6 +10,8 @@ import { createRange } from '../widgets/range.js';
 import { createSlider } from '../widgets/slider.js';
 import { createCurve } from '../widgets/curve.js';
 // import { allDefined } from '/dist/webawesome.js';
+import Matrix from "../math/matrix.js";
+import Vector from "../math/vector.js";
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -171,7 +173,6 @@ export default class GUIManager {
         group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
         // group_transform.appendChild(document.createElement("hr"));
         group_transform.appendChild(createCurve("test", (data) => {
-            console.log(data);
             data.forEach((element, index) => {
                 gpu.uniforms.map[index] = element;
             });
