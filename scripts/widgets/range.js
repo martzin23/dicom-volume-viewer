@@ -170,6 +170,7 @@ export function createRange(
 	}
 
 	function onDragStart(clientX) {
+		console.log("dragging")
 		dragging = true;
 		dragStartX = clientX;
 		dragStartMin = parseInt(element_min.value, 10);

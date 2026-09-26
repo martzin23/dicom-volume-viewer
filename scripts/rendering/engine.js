@@ -3,7 +3,16 @@ import GUIManager from './gui.js';
 import Camera from './camera.js';
 import FPSCounter from '../utility/fps.js';
 import Vector2D from '../math/vector2d.js';
-import Vector3D from '../math/vector3d.js';
+
+// TODO
+// library sliders
+// library toggle
+// curve lines
+// slice controls rewrite
+
+// parser rewrite
+// support dicomdir
+// check stretching
 
 class Engine {
     static async initialize() {

@@ -165,11 +165,19 @@ export default class GUIManager {
         
         document.documentElement.classList.toggle('wa-dark');
         const temp_switch = document.createElement("wa-switch");
+        temp_switch.setAttribute("size", "l");
         temp_switch.innerText = "test";
         group_general.appendChild(temp_switch);
 
+
+        const slider_container = document.createElement("div");
+        slider_container.className = "row gap-medium wide";
+        slider_container.style.width = "calc(100% - 2rem)";
+        const slider_title = document.createElement("p");
+        slider_title.innerText = "Speed";
+
         const temp_slider = document.createElement("wa-slider");
-        temp_slider.setAttribute("label", "Speed");
+        temp_slider.style.width = "100%";
         temp_slider.setAttribute("min", "1");
         temp_slider.setAttribute("max", "4");
         temp_slider.setAttribute("value", "3");
@@ -191,22 +199,21 @@ export default class GUIManager {
         span3.innerHTML = ("Fast");
         temp_slider.appendChild(span3)
 
-        group_general.appendChild(temp_slider);
+        slider_container.appendChild(slider_title);
+        slider_container.appendChild(temp_slider);
+        group_general.appendChild(slider_container);
 
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart");
-        group_transform.appendChild(createDrag((value) => {gpu.uniforms.gamma = value;}, () => gpu.uniforms.gamma, "gamma", 0, Infinity, 0.001));
-        group_transform.appendChild(createDrag((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "strength", 0, Infinity, 0.001));
-        group_transform.appendChild(createDrag((value) => {gpu.uniforms.focus = value;}, () => gpu.uniforms.focus, "focus", 0, Infinity, 0.001));
-        group_transform.appendChild(createDrag((value) => {gpu.uniforms.slope = value;}, () => gpu.uniforms.slope, "slope", 0, Infinity, 0.001));
-        // group_transform.appendChild(document.createElement("hr"));
         group_transform.appendChild(createCurve("test", (data) => {
             data.forEach((element, index) => {
                 gpu.uniforms.map[index] = element;
             });
             gpu.uniforms.map_size = data.length;
         }));
+        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
+        group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value;}, () => gpu.uniforms.power, "Power", 1, 10));
         menu.appendChild(group_transform);
 
         const group_slice = createCollapse("Slice", "fa-cube");

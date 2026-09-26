@@ -1,0 +1,9 @@
+
+:root {
+    --wa-color-brand-50: var(--accent-default);
+    --wa-color-neutral-40: var(--accent-default);
+}
+
+wa-slider span {
+    color: var(--text-muted);
+}

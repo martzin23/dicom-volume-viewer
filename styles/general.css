@@ -53,7 +53,8 @@ input[type="text"] {
     border-radius: var(--roundness);
     box-shadow: var(--shadow-inset);
     border: none;
-    padding: 0.5rem 0.751rem 0.5rem 0.75rem;
+    padding: 0.5rem;
+    height: 2rem;
     width: 4rem;
     font-family: monospace;
 }

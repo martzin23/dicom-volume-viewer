@@ -1,24 +1,29 @@
 
-input[type="range"] {
-    -webkit-appearance: none;
-    background: var(--general-dark);
+.slider input[type="range"] {
     height: 0.5rem;
+    width: 10rem;
+
     border-radius: var(--roundness);
+    background: var(--transluscent);
 }
 
-input[type="range"]::-webkit-slider-thumb {
-    transition: 0.25s;
-    -webkit-appearance: none;
+.slider input[type="range"]::-webkit-slider-thumb {
     cursor: pointer;
-    background: var(--general-default);
+    height: 1.5rem;
+    width: 1.5rem;
+    
+    transition: 0.25s filter;
+    -webkit-appearance: none;
+    border: none;
+    background: var(--accent-default);
     border-radius: var(--roundness);
-    aspect-ratio: 1;
-    height: 2rem;
+    box-shadow: var(--shadow-highlight), var(--shadow-smooth);
 }
 
-input[type="range"]::-webkit-slider-thumb:hover {
-    transition: 0.25s;
-    background-color: var(--general-highlight);
+.slider input[type="range"]::-webkit-slider-thumb:hover {
+    transition: 0.25s filter;
+    cursor: pointer;
+    filter: brightness(140%) hue-rotate(-10deg) saturate(120%);
 }
 
 .slider{
