@@ -12,6 +12,8 @@
     background-image: url(../../assets/images/mesh.png);
     image-rendering: pixelated;
     background-size: 4px;
+    
+    touch-action: none;
 }
 
 .curve input[type="color"] {

@@ -17,15 +17,6 @@ body {
 aside {grid-area: m;}
 main {grid-area: c;}
 
-@media screen and (max-width: 600px) {
-    body {
-        display: grid;
-        grid-template-areas: 'c' 'm';
-        grid-template-columns: 1fr;
-        grid-template-rows: 2fr 1fr;
-    }
-}
-
 @keyframes test {
     0% {
         background-position: 50% 50%;
@@ -83,4 +74,20 @@ aside {
 aside>header {
     /* background-color: var(--transluscent); */
     background: linear-gradient(15deg, var(--transluscent) 0%, #00000000 200%);
+}
+
+/* --- */
+
+@media screen and (max-width: 600px) {
+    body {
+        display: grid;
+        grid-template-areas: 'c' 'm';
+        grid-template-columns: 1fr;
+        grid-template-rows: 2fr 1fr;
+    }
+
+    aside {
+        border-right: none;
+        border-top: 0.25rem solid var(--shadow);
+    }
 }

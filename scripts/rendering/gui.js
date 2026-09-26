@@ -9,9 +9,9 @@ import Vector3D from '../math/vector3d.js';
 import { createRange } from '../widgets/range.js';
 import { createSlider } from '../widgets/slider.js';
 import { createCurve } from '../widgets/curve.js';
-// import { allDefined } from '/dist/webawesome.js';
 import Matrix from "../math/matrix.js";
 import Vector from "../math/vector.js";
+import { allDefined } from 'https://ka-f.webawesome.com/webawesome@3.14.0/webawesome.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -138,7 +138,7 @@ export default class GUIManager {
 
     async setupWidgets(gpu, camera) {
         setupAddTooltip();
-        // await allDefined();
+        await allDefined();
 
         const menu = document.getElementById("menu");
 
@@ -156,14 +156,43 @@ export default class GUIManager {
             camera.updateOrbit();
         });
         group_general.appendChild(element_input);
-        
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
         group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1));
-        
         group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
+        
+        document.documentElement.classList.toggle('wa-dark');
+        const temp_switch = document.createElement("wa-switch");
+        temp_switch.innerText = "test";
+        group_general.appendChild(temp_switch);
+
+        const temp_slider = document.createElement("wa-slider");
+        temp_slider.setAttribute("label", "Speed");
+        temp_slider.setAttribute("min", "1");
+        temp_slider.setAttribute("max", "4");
+        temp_slider.setAttribute("value", "3");
+        temp_slider.setAttribute("with-markers", true);
+        temp_slider.oninput = (event) => {console.log(event.target.value)};
+        
+        const span1 = document.createElement("span");
+        span1.setAttribute("slot", "reference");
+        span1.innerHTML = ("Slow");
+        temp_slider.appendChild(span1)
+        
+        const span2 = document.createElement("span");
+        span2.setAttribute("slot", "reference");
+        span2.innerHTML = ("Medium");
+        temp_slider.appendChild(span2)
+        
+        const span3 = document.createElement("span");
+        span3.setAttribute("slot", "reference");
+        span3.innerHTML = ("Fast");
+        temp_slider.appendChild(span3)
+
+        group_general.appendChild(temp_slider);
+
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart");
