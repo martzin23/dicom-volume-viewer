@@ -131,7 +131,9 @@ vec3 getDensity(vec3 position) {
 
     float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
 
-    return sampleGradient(normalized) * uniforms.strength;
+    float compensator = 1.0 / ((uniforms.slice_forward.y - uniforms.slice_forward.x) * (uniforms.slice_up.y - uniforms.slice_up.x) * (uniforms.slice_side.y - uniforms.slice_side.x));
+
+    return sampleGradient(normalized) * uniforms.strength * compensator;
     // return uniforms.map[1].value;
     // return vec3(1.0, 1.0, 1.0);
 
