@@ -142,7 +142,7 @@ export default class GUIManager {
 
         const menu = document.getElementById("menu");
 
-        const group_general = createCollapse("General", "fa-gear", true);
+        const group_general = createCollapse("General", "fa-gear");
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -205,7 +205,7 @@ export default class GUIManager {
 
         menu.appendChild(group_general);
         
-        const group_transform = createCollapse("Transform", "fa-area-chart");
+        const group_transform = createCollapse("Transform", "fa-area-chart", true);
         group_transform.appendChild(createCurve("test", (data) => {
             data.forEach((element, index) => {
                 gpu.uniforms.map[index] = element;
