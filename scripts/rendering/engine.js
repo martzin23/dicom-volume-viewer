@@ -9,6 +9,7 @@ import Vector2D from '../math/vector2d.js';
 // library toggle
 // curve lines
 // slice controls rewrite
+// fix range
 
 // parser rewrite
 // support dicomdir

@@ -4,7 +4,9 @@ import { addDoubleTapListener } from "../utility/pointer.js";
 
 export function createCurve(name = "Curve", onInput = (data) => {}) {
     let points = [];
+    let user_points = [];
     let previous_top;
+    let power = 1.0;
 
     const element_base = document.createElement("div");
     element_base.className = "curve";
@@ -14,72 +16,42 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
     element_svg.setAttribute('viewBox', '0 0 1 1');
     element_svg.setAttribute('preserveAspectRatio', 'none');
 
-    function drawLine(x1, y1, x2, y2, color1 = "#ffffff", color2) {
-        if (!color2) color2 = color1;
 
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x1);
-        line.setAttribute('y1', y1);
-        line.setAttribute('x2', x2);
-        line.setAttribute('y2', y2);
-        line.setAttribute('stroke', 'white');
-        line.setAttribute('stroke-width', 0.01);
-        line.setAttribute('shape-rendering', 'crispEdges');
-        element_svg.appendChild(line);
 
-        let defs = element_svg.querySelector('defs');
-        if (!defs) {
-        defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-            element_svg.appendChild(defs);
+    function addMidPoints() {
+        for (const x of points) {
+            console.log(x, points)
+            element_base.removeChild(x)
         }
 
-        const gradientId = 'line-gradient-' + Math.random().toString(36).slice(2, 9);
-        const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-        gradient.setAttribute('id', gradientId);
-        gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
-        gradient.setAttribute('x1', x1);
-        gradient.setAttribute('y1', y1);
-        gradient.setAttribute('x2', x2);
-        gradient.setAttribute('y2', y2);
+        points = [...user_points];
 
-        const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop1.setAttribute('offset', '0%');
-        stop1.setAttribute('stop-color', color1);
+        const start_point = createPoint(0.0, 1.0, "#000000", true);
+        element_base.appendChild(start_point);
+        points.push(start_point);
 
-        const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-        stop2.setAttribute('offset', '100%');
-        stop2.setAttribute('stop-color', color2);
+        const end_point = createPoint(1.0, 1.0, "#000000", true);
+        element_base.appendChild(end_point);
+        points.push(end_point);
 
-        gradient.appendChild(stop1);
-        gradient.appendChild(stop2);
-        defs.appendChild(gradient);
-
-        line.setAttribute('stroke', `url(#${gradientId})`);
-    }
-
-    function connectPoints() {
-        while (element_svg.firstChild) {
-            element_svg.removeChild(element_svg.firstChild);
-        }
-        for (let i=0; i<points.length - 1; i++) {
-            const first = points[i];
-            const second = points[i + 1];
+        for (let i=0; i<user_points.length - 1; i++) {
             const first_position = first.getPosition();
             const second_position = second.getPosition();
-            drawLine(first_position.x, first_position.y, second_position.x, second_position.y, first.value, second.value);
+            const mid_point = createPoint((first_position.x + second_position.x) / 2, 0.0, "#000000", true);
+            element_base.appendChild(mid_point);
+            points.push(mid_point);
         }
     }
 
     function update() {
+        // addMidPoints();
+        connectPoints(element_svg, points, power);
         onInput(element_base.getData());
-        connectPoints();
     }
-
-    drawLine(0, 0, 1, 1, "#ffffff", "#ff00ff");
 
     // ---
 
-    function addPoint(x, y, value = "#ffffff", disabled = false) {
+    function createPoint(x, y, value = "#ffffff", disabled = false) {
         const element_color = document.createElement("input");
         element_color.setAttribute("type", "color");
         if (disabled) element_color.setAttribute("disabled", true);
@@ -87,6 +59,8 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         element_color.parent = element_base;
         previous_top = element_color;
         element_color.style.zIndex = 2;
+        element_color.style.left = (x * 100) + "%";
+        element_color.style.top = (y * 100) + "%";
         
         const move_handler = function(event) {
             const rect = element_base.getBoundingClientRect();
@@ -112,7 +86,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         })
 
         element_color.addEventListener("input", (event) => {
-            onInput(element_base.getData());
+            onInput(points2data(points));
             update();
         })
 
@@ -133,9 +107,14 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
             return new Vector2D(element_color.offsetLeft / rect.width, element_color.offsetTop / rect.height);
         }
 
-        element_color.setPosition(x, y);
-        element_base.appendChild(element_color);
-        points.push(element_color);
+        return element_color;
+    }
+
+    function addPoint(x, y, value = "#ffffff", disabled = false) {
+        const element_point = createPoint(x, y, value, disabled);
+        // user_points.push(element_point);
+        element_base.appendChild(element_point);
+        points.push(element_point);
     }
 
     function addLabel(x, y, value) {
@@ -182,6 +161,11 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         update();
     }
 
+    element_base.setPower = (x) => {
+        power = x;
+        update();
+    }
+
     // ---
 
     addPoint(0.0, 1.0, "#000000", true);
@@ -212,8 +196,106 @@ function hex2rgb(hex) {
     return { r, g, b };
 }
 
-function rgb2hex(r, g, b) {
-    return "#" + [Math.floor(r * 255), Math.floor(g * 255), Math.floor(b * 255)]
+function rgb2hex(rgb) {
+    return "#" + [Math.floor(rgb.r * 255), Math.floor(rgb.g * 255), Math.floor(rgb.b * 255)]
     .map(x => x.toString(16).padStart(2, "0"))
     .join("");
+}
+
+function sortPoints(points) {
+    return points.toSorted((a, b) => {
+        a = a.getPosition().x;
+        b = b.getPosition().x;
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0))
+    })
+}
+
+function points2data(points) {
+    points = sortPoints(points);
+    return points.map((el) => {
+        const color = hex2rgb(el.value);
+        const position = el.getPosition();
+        return [color.r * (1.0 - position.y), color.g * (1.0 - position.y), color.b * (1.0 - position.y), position.x];
+    });
+}
+
+function drawLine(svg, x1, y1, x2, y2, color1 = "#ffffff", color2) {
+    if (!color2) color2 = color1;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.setAttribute('stroke', 'white');
+    line.setAttribute('stroke-width', 0.01);
+    svg.appendChild(line);
+
+    let defs = svg.querySelector('defs');
+    if (!defs) {
+    defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        svg.appendChild(defs);
+    }
+
+    const gradientId = 'line-gradient-' + Math.random().toString(36).slice(2, 9);
+    const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+    gradient.setAttribute('id', gradientId);
+    gradient.setAttribute('gradientUnits', 'userSpaceOnUse');
+    gradient.setAttribute('x1', x1);
+    gradient.setAttribute('y1', y1);
+    gradient.setAttribute('x2', x2);
+    gradient.setAttribute('y2', y2);
+
+    const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop1.setAttribute('offset', '0%');
+    stop1.setAttribute('stop-color', color1);
+
+    const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+    stop2.setAttribute('offset', '100%');
+    stop2.setAttribute('stop-color', color2);
+
+    gradient.appendChild(stop1);
+    gradient.appendChild(stop2);
+    defs.appendChild(gradient);
+
+    line.setAttribute('stroke', `url(#${gradientId})`);
+}
+
+function connectPoints(svg, points, power = 1.0, resolution = 4) {
+    points = sortPoints(points);
+    while (svg.firstChild) {
+        svg.removeChild(svg.firstChild);
+    }
+    for (let i=0; i<points.length - 1; i++) {
+        const first = points[i];
+        const second = points[i + 1];
+        const first_position = first.getPosition();
+        const second_position = second.getPosition();
+        for (let j=0; j<resolution; j++) {
+            const first_factor = j / resolution;
+            const second_factor = (j + 1) / resolution;
+            drawLine(
+                svg,
+                mix(first_position.x, second_position.x, first_factor),
+                1 - Math.pow(1 - mix(first_position.y, second_position.y, first_factor), power),
+                mix(first_position.x, second_position.x, second_factor),
+                1 - Math.pow(1 - mix(first_position.y, second_position.y, second_factor), power),
+                rgb2hex(mixColor(hex2rgb(first.value), hex2rgb(second.value), first_factor)), 
+                rgb2hex(mixColor(hex2rgb(first.value), hex2rgb(second.value), second_factor))
+            );
+        }
+        // drawLine(svg, first_position.x, first_position.y, second_position.x, second_position.y, first.value, second.value);
+    }
+}
+
+function mix(a, b, f) {
+    return a * (1 - f) + b * f;
+}
+
+function mixColor(a, b, f) {
+    return {
+        r: mix(a.r, b.r, f),
+        g: mix(a.g, b.g, f),
+        b: mix(a.b, b.b, f)
+    }
 }

@@ -206,14 +206,15 @@ export default class GUIManager {
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart", true);
-        group_transform.appendChild(createCurve("test", (data) => {
+        const element_curve = createCurve("test", (data) => {
             data.forEach((element, index) => {
                 gpu.uniforms.map[index] = element;
             });
             gpu.uniforms.map_size = data.length;
-        }));
-        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
-        group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value;}, () => gpu.uniforms.power, "Power", 1, 10));
+        })
+        group_transform.appendChild(element_curve);
+        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.5));
+        group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
         menu.appendChild(group_transform);
 
         const group_slice = createCollapse("Slice", "fa-cube");
