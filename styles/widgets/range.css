@@ -2,3 +2,7 @@
 .range wa-slider {
     width: 10rem !important;
 }
+
+.range {
+    touch-action: none;
+}

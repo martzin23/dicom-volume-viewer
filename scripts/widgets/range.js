@@ -51,7 +51,7 @@ export function createRange(
 
 	const element_drag = document.createElement("button");
 	element_drag.innerHTML = '<i class="fa fa-arrows-h"></i>';
-	element_drag.addEventListener("mousedown", function(event) {
+	element_drag.addEventListener("pointerdown", function(event) {
 		if (event.button != 0) return;
 		const mousemove_listener = (event) => {
 			const new_min = element_slider.minValue + event.movementX;
@@ -65,11 +65,11 @@ export function createRange(
 			));
 		}
 		const mouseup_listener = () => {
-			document.removeEventListener("mousemove", mousemove_listener);
-			document.removeEventListener("mouseup", mouseup_listener);
+			document.removeEventListener("pointermove", mousemove_listener);
+			document.removeEventListener("pointerup", mouseup_listener);
 		}
-		document.addEventListener("mouseup", mouseup_listener);
-		document.addEventListener("mousemove", mousemove_listener);
+		document.addEventListener("pointerup", mouseup_listener);
+		document.addEventListener("pointermove", mousemove_listener);
 	});
 	element_range.appendChild(element_drag);
 

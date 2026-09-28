@@ -74,6 +74,7 @@ aside {
 aside>header {
     /* background-color: var(--transluscent); */
     background: linear-gradient(15deg, var(--transluscent) 0%, #00000000 200%);
+    box-shadow: var(--shadow-sharp);
 }
 
 /* --- */
