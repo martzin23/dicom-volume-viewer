@@ -161,9 +161,9 @@ export default class GUIManager {
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
         group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1, ["10%", "", "50%", "", "100%"]));
         group_general.appendChild(createSlider((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, 4));
-        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
-        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
-        // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
+        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
+        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
+        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart", true);
@@ -174,6 +174,7 @@ export default class GUIManager {
                 gpu.uniforms.map_size = data.length;
             })
             group_transform.appendChild(element_curve);
+            element_curve.setPower(gpu.uniforms.power);
             group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
             group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
             group_transform.appendChild(document.createElement("hr"));
@@ -186,6 +187,9 @@ export default class GUIManager {
                 button_row.appendChild(presets_text);
                 button_row.appendChild(createButton(() => {element_curve.setPreset(0, gpu);}, "Bones"));
                 button_row.appendChild(createButton(() => {element_curve.setPreset(1, gpu);}, "Lungs"));
+                button_row.appendChild(createButton(() => {element_curve.setPreset(2, gpu);}, "Heart"));
+                button_row.appendChild(createButton(() => {element_curve.setPreset(4, gpu);}, "Vein"));
+                button_row.appendChild(createButton(() => {element_curve.setPreset(3, gpu);}, "All"));
             group_transform.appendChild(button_row);
         menu.appendChild(group_transform);
 

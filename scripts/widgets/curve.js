@@ -32,11 +32,13 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         element_color.style.zIndex = 2;
         element_color.style.left = (x * 100) + "%";
         element_color.style.top = (y * 100) + "%";
+        element_color.position = new Vector2D(x, y);
         
         const move_handler = function(event) {
             const rect = element_base.getBoundingClientRect();
-            element_color.style.left = (event.clientX - rect.left) + "px";
-            element_color.style.top = (event.clientY - rect.top) + "px";
+            // element_color.style.left = (event.clientX - rect.left) + "px";
+            // element_color.style.top = (event.clientY - rect.top) + "px";
+            element_color.setPosition((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
             update();
             previous_top.style.zIndex = 1;
             element_color.style.zIndex = 2;
@@ -71,11 +73,13 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         element_color.setPosition = (x, y) => {
             element_color.style.left = (x * 100) + "%";
             element_color.style.top = (y * 100) + "%";
+            element_color.position = new Vector2D(x, y);
         }
 
         element_color.getPosition = () => {
-            const rect = element_color.parent.getBoundingClientRect();
-            return new Vector2D(element_color.offsetLeft / rect.width, element_color.offsetTop / rect.height);
+            // const rect = element_color.parent.getBoundingClientRect();
+            // return new Vector2D(element_color.offsetLeft / rect.width, element_color.offsetTop / rect.height);
+            return element_color.position;
         }
 
         return element_color;
@@ -141,12 +145,41 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         switch (preset) {
             case 1:
                 addPoint(0, 0.9999999364217163, "#000000", true);
-                addPoint(0.08650189737667052, 0.9999999364217163, "#000000", false);
-                addPoint(0.12642585001205692, 0, "#ffffff", false);
-                addPoint(0.1763307908062899, 0.9333332739936019, "#000000", false);
+                addPoint(0.06844106075412791, 0.9530506163882817, "#000000", false);
+                addPoint(0.10076045460891196, 0.03876488757038831, "#57fcff", false);
+                addPoint(0.12927756907339485, 0.9578125026822089, "#000000", false);
+                addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
+                gpu.uniforms.strength = 0.05248;
+                gpu.uniforms.power = 1;
+                break;
+            case 2:
+                addPoint(0, 0.9999999364217163, "#000000", true);
+                addPoint(0.2243345919053723, 0.8816220676662402, "#000000", false);
+                addPoint(0.25475285241074713, 0.08638394124451057, "#eebebe", false);
+                addPoint(0.31558934803853134, 0.8911458402540944, "#000000", false);
+                addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
+                gpu.uniforms.strength = 0.023572;
+                gpu.uniforms.power = 4.771;
+                break;
+            case 3:
+                addPoint(0, 0.9999999364217163, "#000000", true);
+                addPoint(0.1178707182110086, 0.0625744461965913, "#65eaec", false);
+                addPoint(0.17680608048938357, 0.9197172851742246, "#000000", false);
+                addPoint(0.2205323252065539, 0.2197172661007394, "#f0c1c1", false);
+                addPoint(0.2832699541837473, 0.9006696128419487, "#000000", false);
+                addPoint(0.34220531646212227, 0.16257443983876294, "#ffffff", false);
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.1;
-                gpu.uniforms.power = 3.0;
+                gpu.uniforms.power = 8.2;
+                break;
+            case 4:
+                addPoint(0, 0.9999999364217163, "#000000", true);
+                addPoint(0.24953787608363834, 0.8673364723627426, "#000000", false);
+                addPoint(0.2791127455258118, 0.053050737187020795, "#f0d6d6", false);
+                addPoint(0.31558934803853134, 0.8911458402540944, "#000000", false);
+                addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
+                gpu.uniforms.strength = 0.1;
+                gpu.uniforms.power = 10;
                 break;
             default:
                 addPoint(0, 0.9999999364217163, "#000000", true);
@@ -166,8 +199,8 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
             const position = point.getPosition();
             commands += `addPoint(${position.x}, ${position.y}, "${point.value}", ${point.disabled});\n`;
         }
-        commands += `gpu.uniforms.strength = ${gpu.uniforms.strength};`;
-        commands += `gpu.uniforms.power = ${gpu.uniforms.power}};`;
+        commands += `gpu.uniforms.strength = ${gpu.uniforms.strength};\n`;
+        commands += `gpu.uniforms.power = ${gpu.uniforms.power};`;
         console.log(commands);
     }
 
@@ -175,6 +208,9 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
 
     addPoint(0.0, 1.0, "#000000", true);
     addPoint(1.0, 1.0, "#000000", true);
+    addPoint(0.26, 0.81, "#ffffff", false);
+    addPoint(0.39, 0.05, "#ffffff", false);
+    update();
 
     [-512, 0, 512, 1024, 2048].forEach(x => {
         addLabel(mapRange(x, -1024, 3071, 0, 1), 1.0, x);

@@ -49,19 +49,19 @@ export default class WebGLManager {
             
             grid_stretch: new Vector3D(1.0, this.volume_texture.width / this.volume_texture.height, this.volume_texture.width / this.volume_texture.depth),
             grid_scale: 1.0,
-
-            power: 1.0,
-            strength: 0.01,
-            focus: 0.25,
-            slope: 0.1,
-
+            
             
             slice_x: new Vector2D(0.0, 1.0),
             slice_y: new Vector2D(0.0, 1.0),
-
+            
             slice_z: new Vector2D(0.0, 1.0),
-            padding_a: 0.0,
+            strength: 0.01,
+            power: 1.0,
+
             map_size: 0.0,
+            padding_a: 0.0,
+            padding_b: 0.0,
+            padding_c: 0.0,
 
             map: Array(16).fill([0.0, 0.0, 0.0, 0.0]),
         };

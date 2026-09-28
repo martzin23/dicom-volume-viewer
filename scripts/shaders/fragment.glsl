@@ -21,17 +21,18 @@ layout(std140) uniform UniformBlock {
     vec3 grid_stretch;
     float grid_scale;
 
-    float power;
-    float strength;
-    float focus;
-    float slope;
 
     vec2 slice_x;
     vec2 slice_y;
 
     vec2 slice_z;
-    float padding_a;
+    float strength;
+    float power;
+
     float map_size;
+    float padding_a;
+    float padding_b;
+    float padding_c;
 
     Point map[16];
 } uniforms;
