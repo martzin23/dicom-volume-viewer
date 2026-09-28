@@ -4,6 +4,7 @@ button {
     
     transition: 0.25s;
     background-color: var(--accent-default);
+    background: linear-gradient(0deg, var(--accent-dark) 50%, var(--accent-default) 51%);
     border-radius: var(--roundness);
     box-shadow: var(--shadow-highlight), var(--shadow-smooth);
     border: none;

@@ -5,12 +5,6 @@ import FPSCounter from '../utility/fps.js';
 import Vector2D from '../math/vector2d.js';
 
 // TODO
-// library sliders
-// library toggle
-// curve lines
-// slice controls rewrite
-// fix range
-
 // parser rewrite
 // support dicomdir
 // check stretching

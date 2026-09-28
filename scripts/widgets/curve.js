@@ -4,7 +4,6 @@ import { addDoubleTapListener } from "../utility/pointer.js";
 
 export function createCurve(name = "Curve", onInput = (data) => {}) {
     let points = [];
-    let user_points = [];
     let previous_top;
     let power = 1.0;
 
@@ -16,35 +15,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
     element_svg.setAttribute('viewBox', '0 0 1 1');
     element_svg.setAttribute('preserveAspectRatio', 'none');
 
-
-
-    function addMidPoints() {
-        for (const x of points) {
-            console.log(x, points)
-            element_base.removeChild(x)
-        }
-
-        points = [...user_points];
-
-        const start_point = createPoint(0.0, 1.0, "#000000", true);
-        element_base.appendChild(start_point);
-        points.push(start_point);
-
-        const end_point = createPoint(1.0, 1.0, "#000000", true);
-        element_base.appendChild(end_point);
-        points.push(end_point);
-
-        for (let i=0; i<user_points.length - 1; i++) {
-            const first_position = first.getPosition();
-            const second_position = second.getPosition();
-            const mid_point = createPoint((first_position.x + second_position.x) / 2, 0.0, "#000000", true);
-            element_base.appendChild(mid_point);
-            points.push(mid_point);
-        }
-    }
-
     function update() {
-        // addMidPoints();
         connectPoints(element_svg, points, power);
         onInput(element_base.getData());
     }
@@ -112,7 +83,6 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
 
     function addPoint(x, y, value = "#ffffff", disabled = false) {
         const element_point = createPoint(x, y, value, disabled);
-        // user_points.push(element_point);
         element_base.appendChild(element_point);
         points.push(element_point);
     }
@@ -164,6 +134,41 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
     element_base.setPower = (x) => {
         power = x;
         update();
+    }
+
+    element_base.setPreset = (preset, gpu) => {
+        element_base.clearPoints();
+        switch (preset) {
+            case 1:
+                addPoint(0, 0.9999999364217163, "#000000", true);
+                addPoint(0.08650189737667052, 0.9999999364217163, "#000000", false);
+                addPoint(0.12642585001205692, 0, "#ffffff", false);
+                addPoint(0.1763307908062899, 0.9333332739936019, "#000000", false);
+                addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
+                gpu.uniforms.strength = 0.1;
+                gpu.uniforms.power = 3.0;
+                break;
+            default:
+                addPoint(0, 0.9999999364217163, "#000000", true);
+                addPoint(0.31939162108309116, 0.9416666067971161, "#000000", false);
+                addPoint(0.3659695658243753, 0.07499999523162872, "#ffffff", false);
+                addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
+                gpu.uniforms.strength = 0.01;
+                gpu.uniforms.power = 1.0;
+            break;
+        }
+        update();
+    }
+
+    element_base.printPreset = (gpu) => {
+        let commands = "";
+        for (const point of points) {
+            const position = point.getPosition();
+            commands += `addPoint(${position.x}, ${position.y}, "${point.value}", ${point.disabled});\n`;
+        }
+        commands += `gpu.uniforms.strength = ${gpu.uniforms.strength};`;
+        commands += `gpu.uniforms.power = ${gpu.uniforms.power}};`;
+        console.log(commands);
     }
 
     // ---

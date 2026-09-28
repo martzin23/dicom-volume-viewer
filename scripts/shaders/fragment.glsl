@@ -26,10 +26,10 @@ layout(std140) uniform UniformBlock {
     float focus;
     float slope;
 
-    vec2 slice_forward;
-    vec2 slice_side;
+    vec2 slice_x;
+    vec2 slice_y;
 
-    vec2 slice_up;
+    vec2 slice_z;
     float padding_a;
     float map_size;
 
@@ -58,7 +58,7 @@ void main() {
     Ray camera_ray;
     camera_ray.origin = uniforms.camera_position;
     camera_ray.origin *= uniforms.grid_scale;
-    camera_ray.origin += (vec3(uniforms.slice_side.y, uniforms.slice_forward.y, uniforms.slice_up.y) + vec3(uniforms.slice_side.x, uniforms.slice_forward.x, uniforms.slice_up.x)) * (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch * vec3(0.5));
+    camera_ray.origin += (vec3(uniforms.slice_x.y, uniforms.slice_y.y, uniforms.slice_z.y) + vec3(uniforms.slice_x.x, uniforms.slice_y.x, uniforms.slice_z.x)) * (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch * vec3(0.5));
     camera_ray.direction = (uniforms.camera_rotation * vec4(normalize(vec3(centered_coordinates.x * uniforms.fov, 1.0, centered_coordinates.y * uniforms.fov)), 1.0)).xyz;
     camera_ray.inverse = 1.0 / camera_ray.direction;
 
@@ -69,8 +69,8 @@ void main() {
 
 vec3 traverse(Ray ray) {
     vec3 density = vec3(0.0);
-    vec3 slice_start = floor(vec3(vec3(uniforms.slice_side.x, uniforms.slice_forward.x, uniforms.slice_up.x) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
-    vec3 slice_end = floor(vec3(vec3(uniforms.slice_side.y, uniforms.slice_forward.y, uniforms.slice_up.y) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec3 slice_start = floor(vec3(vec3(uniforms.slice_x.x, uniforms.slice_y.x, uniforms.slice_z.x) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
+    vec3 slice_end = floor(vec3(vec3(uniforms.slice_x.y, uniforms.slice_y.y, uniforms.slice_z.y) * uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch));
     vec2 bbox_t = intersect(ray, slice_start, slice_end);
     if (bbox_t.x > bbox_t.y)
         return vec3(0.0);
@@ -128,7 +128,7 @@ vec3 getDensity(vec3 position) {
     vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
     float value = texture(volume_texture, coordinate).r;
     float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
-    float compensator = 1.0 / ((uniforms.slice_forward.y - uniforms.slice_forward.x) * (uniforms.slice_up.y - uniforms.slice_up.x) * (uniforms.slice_side.y - uniforms.slice_side.x));
+    float compensator = 1.0 / ((uniforms.slice_y.y - uniforms.slice_y.x) * (uniforms.slice_z.y - uniforms.slice_z.x) * (uniforms.slice_x.y - uniforms.slice_x.x));
     return pow(sampleGradient(normalized), vec3(uniforms.power)) * uniforms.strength * compensator;
 }
 

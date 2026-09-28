@@ -56,10 +56,10 @@ export default class WebGLManager {
             slope: 0.1,
 
             
-            slice_forward: new Vector2D(0.0, 1.0),
-            slice_side: new Vector2D(0.0, 1.0),
+            slice_x: new Vector2D(0.0, 1.0),
+            slice_y: new Vector2D(0.0, 1.0),
 
-            slice_up: new Vector2D(0.0, 1.0),
+            slice_z: new Vector2D(0.0, 1.0),
             padding_a: 0.0,
             map_size: 0.0,
 

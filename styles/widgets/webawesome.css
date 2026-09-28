@@ -31,4 +31,10 @@ wa-slider::part(thumb) {
     box-shadow: var(--shadow-highlight), var(--shadow-smooth);
 }
 
+wa-slider::part(thumb):hover {
+    transition: 0.25s filter;
+    cursor: pointer;
+    filter: brightness(140%) hue-rotate(-10deg) saturate(120%);
+}
+
 /* --- */

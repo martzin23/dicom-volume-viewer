@@ -12,6 +12,7 @@ import { createCurve } from '../widgets/curve.js';
 import Matrix from "../math/matrix.js";
 import Vector from "../math/vector.js";
 import { allDefined } from 'https://ka-f.webawesome.com/webawesome@3.14.0/webawesome.js';
+import { createButton } from '../widgets/button.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -143,7 +144,7 @@ export default class GUIManager {
 
         const menu = document.getElementById("menu");
 
-        const group_general = createCollapse("General", "fa-gear");
+        const group_general = createCollapse("General", "fa-gear", true);
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -166,21 +167,32 @@ export default class GUIManager {
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart", true);
-        const element_curve = createCurve("test", (data) => {
-            data.forEach((element, index) => {
-                gpu.uniforms.map[index] = element;
-            });
-            gpu.uniforms.map_size = data.length;
-        })
-        group_transform.appendChild(element_curve);
-        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
-        group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
+            const element_curve = createCurve("test", (data) => {
+                data.forEach((element, index) => {
+                    gpu.uniforms.map[index] = element;
+                });
+                gpu.uniforms.map_size = data.length;
+            })
+            group_transform.appendChild(element_curve);
+            group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
+            group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
+            group_transform.appendChild(document.createElement("hr"));
+            const button_row = document.createElement("div");
+                button_row.className = "row gap-medium align-center";
+                // button_row.appendChild(document.createElementc);
+                const presets_text = document.createElement("p");
+                presets_text.innerText = "Presets";
+                presets_text.addEventListener("click", (event) => {element_curve.printPreset(gpu);})
+                button_row.appendChild(presets_text);
+                button_row.appendChild(createButton(() => {element_curve.setPreset(0, gpu);}, "Bones"));
+                button_row.appendChild(createButton(() => {element_curve.setPreset(1, gpu);}, "Lungs"));
+            group_transform.appendChild(button_row);
         menu.appendChild(group_transform);
 
-        const group_slice = createCollapse("Slice", "fa-cube");
-        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_up = value;}, () => gpu.uniforms.slice_up, "Slice Up", 0, 1));
-        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_forward = value;}, () => gpu.uniforms.slice_forward, "Slice Forward", 0, 1));
-        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_side = value;}, () => gpu.uniforms.slice_side, "Slice Side", 0, 1));
+        const group_slice = createCollapse("Slice", "fa-cube", true);
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_x = value;}, () => gpu.uniforms.slice_x, "Slice X", 0, 1));
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_y = value;}, () => gpu.uniforms.slice_y, "Slice Y", 0, 1));
+        group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_z = value;}, () => gpu.uniforms.slice_z, "Slice Z", 0, 1));
         menu.appendChild(group_slice);
     }
 }

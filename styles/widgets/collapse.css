@@ -98,6 +98,10 @@
     }
 }
 
+.collapse>hr {
+    width: calc(100% - 2rem);
+}
+
 @keyframes extend {
     0% {
         width: 0%;
