@@ -21,7 +21,6 @@ export function createRange(
 	element_range.className = "range row gap-medium align-center justify-start";
 
 	const element_slider = document.createElement("wa-slider");
-	element_slider.style.width = "100%";
 	element_slider.setAttribute("min", 0);
 	element_slider.setAttribute("max", RESOLUTION);
 	element_slider.setAttribute("min-value", mapRange(default_value_min, min, max, 0, RESOLUTION));

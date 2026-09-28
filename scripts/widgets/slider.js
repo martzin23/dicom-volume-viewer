@@ -1,9 +1,9 @@
 import resizeNumber from "../utility/resize_number.js";
 
-export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slider", min = 0, max = 1, log = false) {
+export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slider", min = 0, max = 1, labels, log = false, input = true) {
     if (log) min = Math.max(min, 0.000001);
     const default_value = resizeNumber(Math.max(Math.min(get(), max), min));
-    const resolution = 1000.0;
+    const RESOLUTION = (labels?.length > 2) ? labels.length - 1 : 1000.0;
 
     const fac2val = function(fac) {
         if (!log)
@@ -19,54 +19,66 @@ export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slide
             return (Math.log(val) - Math.log(min)) / (Math.log(max) - Math.log(min));
     }
 
-    const element_text = document.createElement("input");
-    element_text.setAttribute("type", "text");
-    element_text.setAttribute("pattern", '-?([0-9]+)(.[0-9]+)?');
-    element_text.setAttribute("required", "");
-    element_text.setAttribute("value", default_value);
+    let element_text;
+    if (!!input) {
+        element_text = document.createElement("input");
+        element_text.setAttribute("type", "text");
+        element_text.setAttribute("pattern", '-?([0-9]+)(.[0-9]+)?');
+        element_text.setAttribute("required", "");
+        element_text.setAttribute("value", default_value);
+    }
 
-    const element_range = document.createElement("input");
-    element_range.setAttribute("type", "range");
-    element_range.setAttribute("value", "1");
-    element_range.setAttribute("min", "0");
-    element_range.setAttribute("max", resolution);
-    element_range.setAttribute("step", "1");
-    element_range.setAttribute("value", val2fac(default_value) * resolution);
+    const element_slider = document.createElement("wa-slider");
+    element_slider.setAttribute("min", "0");
+    element_slider.setAttribute("max", RESOLUTION);
+    element_slider.setAttribute("value", val2fac(default_value) * RESOLUTION);
+    if (labels?.length > 2) element_slider.setAttribute("with-markers", true);
 
-    element_text.addEventListener("focusout", function() {
-        if (this.checkValidity()) {
-            const value = resizeNumber(Math.min(Math.max(parseFloat(this.value), min), max));
-            this.value = value;
-            element_range.value = val2fac(value) * resolution;
-            set(parseFloat(value));
-        } else {
+    if (!!input) {
+        element_text.addEventListener("focusout", function() {
+            if (this.checkValidity()) {
+                const value = resizeNumber(Math.min(Math.max(parseFloat(this.value), min), max));
+                this.value = value;
+                element_slider.value = val2fac(value) * RESOLUTION;
+                set(parseFloat(value));
+            } else {
+                const value = resizeNumber(get());
+                this.value = value;
+                element_slider.value = val2fac(value) * RESOLUTION;
+            }
+        });
+    
+        element_slider.addEventListener("input", function() {
+            const factor = parseInt(this.value) / RESOLUTION;
+            const temp = resizeNumber(fac2val(factor));
+            if (input) element_text.value = temp;
+            set(parseFloat(temp));
+        });
+        
+        element_text.addEventListener("updategui", function() {
+            if (this.matches(":focus")) return;
             const value = resizeNumber(get());
             this.value = value;
-            element_range.value = val2fac(value) * resolution;
-        }
-    });
+            element_slider.value = val2fac(value) * RESOLUTION;
+        });
+    }
 
-    element_range.addEventListener("input", function() {
-        const factor = parseInt(this.value) / resolution;
-        const temp = resizeNumber(fac2val(factor));
-        element_text.value = temp;
-        set(parseFloat(temp));
-    });
-    
-    element_text.addEventListener("updategui", function() {
-        if (this.matches(":focus")) return;
-        const value = resizeNumber(get());
-        this.value = value;
-        element_range.value = val2fac(value) * resolution;
-    });
+	if (!!labels) {
+		for (const label of labels) {
+			const span = document.createElement("span");
+			span.setAttribute("slot", "reference");
+			span.innerText = label;
+			element_slider.appendChild(span);
+		} 
+	}
 
     const element_name = document.createElement("p");
     element_name.innerText = name;
 
     const element_base = document.createElement("div");
     element_base.className = "slider";
-    element_base.appendChild(element_text);
-    element_base.appendChild(element_range);
+    if (input) element_base.appendChild(element_text);
+    element_base.appendChild(element_slider);
     element_base.appendChild(element_name);
     
     return element_base;

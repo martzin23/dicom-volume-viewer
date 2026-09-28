@@ -1,14 +1,8 @@
 
-:root {
-    --wa-color-brand-50: var(--accent-default);
-    --wa-color-neutral-40: var(--accent-default);
-}
-
-/* --- */
-
-wa-slider {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+wa-slider::part(slider) {
+    /* padding-left: 0.75rem;
+    padding-right: 0.75rem; */
+    padding: 0.5rem 0.75rem 0.5rem 0.75rem;
 }
 
 wa-slider span {
@@ -35,6 +29,10 @@ wa-slider::part(thumb):hover {
     transition: 0.25s filter;
     cursor: pointer;
     filter: brightness(140%) hue-rotate(-10deg) saturate(120%);
+}
+
+wa-slider::part(indicator) {
+    background-color: var(--accent-default);
 }
 
 /* --- */

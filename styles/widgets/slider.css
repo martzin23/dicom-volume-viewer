@@ -1,5 +1,5 @@
 
-.slider input[type="range"] {
+/* .slider input[type="range"] {
     height: 0.5rem;
     width: 10rem;
 
@@ -24,7 +24,7 @@
     transition: 0.25s filter;
     cursor: pointer;
     filter: brightness(140%) hue-rotate(-10deg) saturate(120%);
-}
+} */
 
 .slider{
     display: flex;
@@ -32,4 +32,8 @@
     align-items: center;
     justify-content: flex-start;
     gap: 0.5rem;
+}
+
+.slider wa-slider {
+    width: 10rem ;
 }
