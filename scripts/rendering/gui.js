@@ -139,6 +139,7 @@ export default class GUIManager {
     async setupWidgets(gpu, camera) {
         setupAddTooltip();
         await allDefined();
+        document.documentElement.classList.toggle('wa-dark');
 
         const menu = document.getElementById("menu");
 
@@ -162,47 +163,6 @@ export default class GUIManager {
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
         // group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
-        
-        document.documentElement.classList.toggle('wa-dark');
-        const temp_switch = document.createElement("wa-switch");
-        temp_switch.setAttribute("size", "l");
-        temp_switch.innerText = "test";
-        group_general.appendChild(temp_switch);
-
-
-        const slider_container = document.createElement("div");
-        slider_container.className = "row gap-medium wide";
-        slider_container.style.width = "calc(100% - 2rem)";
-        const slider_title = document.createElement("p");
-        slider_title.innerText = "Speed";
-
-        const temp_slider = document.createElement("wa-slider");
-        temp_slider.style.width = "100%";
-        temp_slider.setAttribute("min", "1");
-        temp_slider.setAttribute("max", "4");
-        temp_slider.setAttribute("value", "3");
-        temp_slider.setAttribute("with-markers", true);
-        temp_slider.oninput = (event) => {console.log(event.target.value)};
-        
-        const span1 = document.createElement("span");
-        span1.setAttribute("slot", "reference");
-        span1.innerHTML = ("Slow");
-        temp_slider.appendChild(span1)
-        
-        const span2 = document.createElement("span");
-        span2.setAttribute("slot", "reference");
-        span2.innerHTML = ("Medium");
-        temp_slider.appendChild(span2)
-        
-        const span3 = document.createElement("span");
-        span3.setAttribute("slot", "reference");
-        span3.innerHTML = ("Fast");
-        temp_slider.appendChild(span3)
-
-        slider_container.appendChild(slider_title);
-        slider_container.appendChild(temp_slider);
-        group_general.appendChild(slider_container);
-
         menu.appendChild(group_general);
         
         const group_transform = createCollapse("Transform", "fa-area-chart", true);
@@ -213,7 +173,7 @@ export default class GUIManager {
             gpu.uniforms.map_size = data.length;
         })
         group_transform.appendChild(element_curve);
-        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.5));
+        group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
         group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
         menu.appendChild(group_transform);
 

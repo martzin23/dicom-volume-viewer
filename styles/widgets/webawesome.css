@@ -4,6 +4,31 @@
     --wa-color-neutral-40: var(--accent-default);
 }
 
+/* --- */
+
+wa-slider {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
 wa-slider span {
     color: var(--text-muted);
 }
+
+wa-slider::part(track) {
+    background-color: var(--transluscent);
+}
+
+wa-slider::part(thumb) {
+    cursor: pointer;
+    height: 1.5rem;
+    width: 1.5rem;
+    
+    transition: 0.25s filter;
+    border: none;
+    background: var(--accent-default);
+    border-radius: var(--roundness);
+    box-shadow: var(--shadow-highlight), var(--shadow-smooth);
+}
+
+/* --- */

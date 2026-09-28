@@ -69,10 +69,11 @@ input[type="file"]::file-selector-button {
     background-color: var(--general-default);
     border-radius: var(--roundness);
     border: none;
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
     color: var(--text-default);
     box-shadow: var(--shadow-highlight);
     font-size: 1rem;
+    height: auto;
 }
 input[type="file"]::file-selector-button:hover {
     transition: 0.25s;
@@ -84,7 +85,7 @@ samp {
     background-color: var(--transluscent);
     border-radius: var(--roundness);
     box-shadow: var(--shadow-inset);
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
     font-family: monospace;
     width: max-content;
 }

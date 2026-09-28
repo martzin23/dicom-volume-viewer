@@ -74,6 +74,16 @@
     animation: extend 0.5s forwards;
 }
 
+.collapse>*:first-child>:last-child {
+    transition: 0.25s transform;
+}
+
+
+.collapse.open>*:first-child>i:last-child {
+    transition: 0.25s transform;
+    transform: rotate(90deg);
+}
+
 .collapse>*:first-child>* {
     color: var(--text-default);
     /* line-height: 1rem; */
