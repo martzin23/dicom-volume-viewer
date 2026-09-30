@@ -160,7 +160,7 @@ export default class GUIManager {
         group_general.appendChild(element_input);
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
         group_general.appendChild(createButton((value) => {gpu.synchronize()}, "Sync"));
-        group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1, ["10%", "", "50%", "", "100%"]));
+        group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1));
         menu.appendChild(group_general);
         
         const group_grid = createCollapse("Grid", "fa-cubes", true);
