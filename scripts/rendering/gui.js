@@ -159,25 +159,31 @@ export default class GUIManager {
         });
         group_general.appendChild(element_input);
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
+        group_general.appendChild(createButton((value) => {gpu.synchronize()}, "Sync"));
         group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1, ["10%", "", "50%", "", "100%"]));
-        group_general.appendChild(createSlider((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Grid multiplier", 0, 4));
-        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.001));
-        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.001));
-        group_general.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.001));
         menu.appendChild(group_general);
         
-        const group_transform = createCollapse("Transform", "fa-area-chart", true);
+        const group_grid = createCollapse("Grid", "fa-cubes", true);
+        group_grid.appendChild(createSlider((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", 0.1, 4));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.01));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.01));
+        group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.01));
+        menu.appendChild(group_grid);
+        
+        const group_density = createCollapse("Density", "fa-area-chart", true);
             const element_curve = createCurve("test", (data) => {
                 data.forEach((element, index) => {
                     gpu.uniforms.map[index] = element;
                 });
                 gpu.uniforms.map_size = data.length;
             })
-            group_transform.appendChild(element_curve);
+            group_density.appendChild(element_curve);
             element_curve.setPower(gpu.uniforms.power);
-            group_transform.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
-            group_transform.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
-            group_transform.appendChild(document.createElement("hr"));
+            group_density.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
+            group_density.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
+            group_density.appendChild(createDrag((value) => {gpu.uniforms.range_min = value;}, () => gpu.uniforms.range_min, "Range Min", -Infinity, Infinity, 1));
+            group_density.appendChild(createDrag((value) => {gpu.uniforms.range_max = value;}, () => gpu.uniforms.range_max, "Range Max", -Infinity, Infinity, 1));
+            group_density.appendChild(document.createElement("hr"));
             const button_row = document.createElement("div");
                 button_row.className = "row gap-medium align-center";
                 // button_row.appendChild(document.createElementc);
@@ -190,8 +196,8 @@ export default class GUIManager {
                 button_row.appendChild(createButton(() => {element_curve.setPreset(2, gpu);}, "Heart"));
                 button_row.appendChild(createButton(() => {element_curve.setPreset(4, gpu);}, "Vein"));
                 button_row.appendChild(createButton(() => {element_curve.setPreset(3, gpu);}, "All"));
-            group_transform.appendChild(button_row);
-        menu.appendChild(group_transform);
+            group_density.appendChild(button_row);
+        menu.appendChild(group_density);
 
         const group_slice = createCollapse("Slice", "fa-cube", true);
         group_slice.appendChild(createRange((value) => {gpu.uniforms.slice_x = value;}, () => gpu.uniforms.slice_x, "Slice X", 0, 1));

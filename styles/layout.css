@@ -1,30 +1,21 @@
 
 body {
-    height: 100dvh;
-    width: 100dvw;
+    position: relative;
+    height: 100vh;
+    width: 100vw;
     background: linear-gradient(0deg, var(--background-dark) 0%, var(--background-light) 100%);
     box-shadow: 0rem 0rem 0.5rem var(--shadow) inset;
 
-    animation-name: test;
-    animation-duration: 1s;
-
     display: grid;
-    grid-template-areas: 'm c';
+    grid-template-areas: 'a b';
     grid-template-columns: 30rem 1fr;
     grid-template-rows: 1fr;
+
+    overflow: hidden;
 }
 
-aside {grid-area: m;}
-main {grid-area: c;}
-
-@keyframes test {
-    0% {
-        background-position: 50% 50%;
-    }
-    100% {
-        background-position: 0% 0%;
-    }
-}
+aside {grid-area: a;}
+main {grid-area: b;}
 
 /* --- */
 
@@ -32,16 +23,14 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    
+
     padding: 1rem;
     background: radial-gradient(circle, var(--accent-default) 0%, #ffffff00 60%);
-    /* background: radial-gradient(at 67% 79%, #64FFDA, transparent 70%), radial-gradient(at 16% 50%, #7C4DFF, transparent 70%), radial-gradient(at 67% 21%, #18FFFF, transparent 70%), #0A1F2E; */
-    /* background: radial-gradient(at center bottom, #ABF5F442 0%, #01010100 100%); */
 }
 
 canvas {
-    width: calc(100% - 1rem);
-    height: calc(100% - 1rem);
+    width: 100%;
+    height: 100%;
 
     border-radius: var(--roundness);
     box-shadow: var(--shadow-smooth), var(--shadow-sharp), var(--shadow-highlight);
@@ -64,7 +53,6 @@ aside {
     background-image: url(../assets/images/dither.png);
     background-blend-mode: darken;
     background-size: 4px;
-    image-rendering: optimizeSpeed;
 
     background-color: var(--transluscent);
     box-shadow: var(--shadow-smooth);
@@ -72,7 +60,6 @@ aside {
 }
 
 aside>header {
-    /* background-color: var(--transluscent); */
     background: linear-gradient(15deg, var(--transluscent) 0%, #00000000 200%);
     box-shadow: var(--shadow-sharp);
 }
@@ -82,7 +69,7 @@ aside>header {
 @media screen and (max-width: 600px) {
     body {
         display: grid;
-        grid-template-areas: 'c' 'm';
+        grid-template-areas: 'b' 'a';
         grid-template-columns: 1fr;
         grid-template-rows: 2fr 1fr;
     }

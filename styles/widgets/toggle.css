@@ -31,12 +31,12 @@
     aspect-ratio: 1;
     border-radius: var(--roundness);
 
-    background-color: var(--general-default);
+    background-color: var(--accent-default);
     box-shadow: var(--shadow-highlight);
 }
 
 .boolean:hover>* {
-    background-color: var(--general-highlight);
+    filter: brightness(150%);
 }
 
 .boolean:hover {

@@ -30,8 +30,8 @@ layout(std140) uniform UniformBlock {
     float power;
 
     float map_size;
-    float padding_a;
-    float padding_b;
+    float range_min;
+    float range_max;
     float padding_c;
 
     Point map[16];
@@ -128,7 +128,7 @@ vec2 intersect(Ray ray, vec3 p_min, vec3 p_max) {
 vec3 getDensity(vec3 position) {
     vec3 coordinate = position / (uniforms.grid_size * uniforms.grid_scale * uniforms.grid_stretch);
     float value = texture(volume_texture, coordinate).r;
-    float normalized = clamp((value + 1024.0) / (1024.0 + 3071.0), 0.0, 1.0);
+    float normalized = clamp((value + uniforms.range_min) / (uniforms.range_min + uniforms.range_max), 0.0, 1.0);
     float compensator = 1.0 / ((uniforms.slice_y.y - uniforms.slice_y.x) * (uniforms.slice_z.y - uniforms.slice_z.x) * (uniforms.slice_x.y - uniforms.slice_x.x));
     return pow(sampleGradient(normalized), vec3(uniforms.power)) * uniforms.strength * compensator;
 }

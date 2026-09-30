@@ -4,11 +4,11 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<title>Ray Voxel Traversal</title>
+	<title>DICOM Viewer</title>
 
 	<script type="module" defer src="./scripts/rendering/engine.js"></script>
 
-	<link rel="stylesheet" href="./styles/general.css">
+	<link rel="stylesheet" href="./styles/general.css">  
 	<link rel="stylesheet" href="./styles/widgets/button.css">
 	<link rel="stylesheet" href="./styles/widgets/collapse.css">
 	<link rel="stylesheet" href="./styles/widgets/comment.css">
@@ -39,19 +39,18 @@
 </head>
 
 <body>
-
 	<aside>
 		<header>
 			<div class="row gap-medium align-center justify-space-between padding-medium">
-				<p>Volume Viewer</p>
+				<p>DICOM Viewer</p>
 				<samp id="output-fps">0 fps</samp>
 			</div>
 		</header>
 		<menu class="column gap-medium padding-medium wide tall" id="menu"></div>
 	</aside>
-
-	<main>
-		<canvas id="canvas" \>
+	
+	<main class="wide tall">
+		<canvas id="canvas"></canvas>
 	</main>
 
 	<div class="popup hidden" id="popup">

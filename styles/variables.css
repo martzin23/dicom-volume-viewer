@@ -1,6 +1,6 @@
 
 :root {
-    font-size: 10px;
+    font-size: 12px;
     --roundness: 0.5rem;
     --spacing: 2rem;
 }
@@ -43,6 +43,5 @@
 @media screen and (max-width: 768px) {
     :root {
         --spacing: 0.5rem;
-        font-size: 12px;
     }
 }

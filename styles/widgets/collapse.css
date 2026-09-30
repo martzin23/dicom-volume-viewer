@@ -41,7 +41,6 @@
     margin: 0rem;
     margin-bottom: 0.5rem;
 
-    /* background-color: var(--accent-dark); */
     background: linear-gradient(-45deg, var(--accent-dark) 0%, var(--accent-default) 100%);
     box-shadow: var(--shadow-highlight);
     border-top-left-radius: var(--roundness);
@@ -65,7 +64,6 @@
 
 .collapse.closed>*:first-child>hr {
     animation: contract 0.5s forwards;
-    /* display: none; */
     border-color: #00000000;
 }
 
@@ -78,7 +76,6 @@
     transition: 0.25s transform;
 }
 
-
 .collapse.open>*:first-child>i:last-child {
     transition: 0.25s transform;
     transform: rotate(90deg);
@@ -89,6 +86,16 @@
     /* line-height: 1rem; */
 }
 
+.collapse>hr {
+    border: 0.25rem solid var(--lighten);
+    border-radius: var(--roundness);
+    width: calc(100% - 2rem);
+    height: 0px;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 @keyframes contract {
     0% {
         width: 100%;
@@ -96,10 +103,6 @@
     100% {
         width: 0%;
     }
-}
-
-.collapse>hr {
-    width: calc(100% - 2rem);
 }
 
 @keyframes extend {

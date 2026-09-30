@@ -2,7 +2,7 @@
 button {
     position: relative;
     
-    transition: 0.25s;
+    transition: 0.25s filter;
     background-color: var(--accent-default);
     background: linear-gradient(0deg, var(--accent-dark) 50%, var(--accent-default) 51%);
     border-radius: var(--roundness);
@@ -22,7 +22,7 @@ button {
 }
 
 button:hover {
-    transition: 0.25s;
+    transition: 0.25s filter;
     filter: brightness(150%);
 }
 

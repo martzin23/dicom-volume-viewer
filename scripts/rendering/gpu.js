@@ -7,6 +7,7 @@ import * as WebGL from "./webgl.js";
 export default class WebGLManager {
     static async initialize(canvas) {
         const fragment_shader_code = await (await fetch('./scripts/shaders/fragment.glsl')).text();
+        
         const width = 16, height = 16, depth = 16;
         const data = new Float32Array(width * height * depth);
         for (let i=0; i<width * height * depth; i++)
@@ -59,8 +60,8 @@ export default class WebGLManager {
             power: 1.0,
 
             map_size: 0.0,
-            padding_a: 0.0,
-            padding_b: 0.0,
+            range_min: 1024.0,
+            range_max: 3071.0,
             padding_c: 0.0,
 
             map: Array(16).fill([0.0, 0.0, 0.0, 0.0]),
