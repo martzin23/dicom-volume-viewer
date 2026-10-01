@@ -100,13 +100,14 @@ export default class GUIManager {
             })
         });
 
-        document.addEventListener('pointerdown', (event) => {
-            this.trigger();
+        window.addEventListener('pointerdown', (event) => {
+            this.trigger(50);
         });
 
-        document.addEventListener("pointermove", (event) => {
-            if (event.button !== -1)
+        window.addEventListener("pointermove", (event) => {
+            if (event.pressure !== 0)
                 this.trigger();
+            // console.log(event);
         })
         
         canvas.addEventListener("wheel", (event) => {
@@ -153,6 +154,7 @@ export default class GUIManager {
                     gpu.uniforms.map[index] = element;
                 });
                 gpu.uniforms.map_size = data.length;
+                this.trigger(50);
             })
             group_density.appendChild(element_curve);
             element_curve.setPower(gpu.uniforms.power);

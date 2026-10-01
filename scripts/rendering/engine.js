@@ -28,6 +28,7 @@ class Engine {
         this.camera = new Camera(document.getElementById("canvas"), this.gpu.volume_texture.width, new Vector2D(-135.0, 35.0));
         this.gui = new GUIManager(document.getElementById("canvas"), this.gpu, this.camera);
         this.fps_handler = setInterval(() => this.fps.set(), 1000);
+        this.render_handler = setInterval(() => {this.gpu.render()}, 1000);
     }
 
     update() {
