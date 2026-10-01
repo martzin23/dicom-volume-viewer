@@ -13,6 +13,7 @@ import Matrix from "../math/matrix.js";
 import Vector from "../math/vector.js";
 import { allDefined } from 'https://ka-f.webawesome.com/webawesome@3.14.0/webawesome.js';
 import { createButton } from '../widgets/button.js';
+import { createSliderRadio } from '../widgets/slider_radio.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -159,12 +160,11 @@ export default class GUIManager {
         });
         group_general.appendChild(element_input);
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
-        group_general.appendChild(createButton((value) => {gpu.synchronize()}, "Sync"));
-        group_general.appendChild(createSlider((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", 0.1, 1));
+        group_general.appendChild(createSliderRadio((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", [0.1, 0.25, 0.5, 1.0], ["Low", "Quarter", "Half", "Full"]));
         menu.appendChild(group_general);
         
         const group_grid = createCollapse("Grid", "fa-cubes", true);
-        group_grid.appendChild(createSlider((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", 0.1, 4));
+        group_grid.appendChild(createSliderRadio((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", [0.5, 1.0, 2.0, 4.0], ["Half", "Full", "Double", "Quad"]));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.01));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.01));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.01));

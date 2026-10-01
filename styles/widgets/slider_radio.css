@@ -1,0 +1,13 @@
+.slider-radio wa-slider.wide {
+    width: 100%;
+}
+
+.slider-radio {
+    width: calc(100% - 2rem);
+
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: start;
+}

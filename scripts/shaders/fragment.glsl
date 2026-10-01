@@ -130,7 +130,7 @@ vec3 getDensity(vec3 position) {
     float value = texture(volume_texture, coordinate).r;
     float normalized = clamp((value + uniforms.range_min) / (uniforms.range_min + uniforms.range_max), 0.0, 1.0);
     float compensator = 1.0 / ((uniforms.slice_y.y - uniforms.slice_y.x) * (uniforms.slice_z.y - uniforms.slice_z.x) * (uniforms.slice_x.y - uniforms.slice_x.x));
-    return pow(sampleGradient(normalized), vec3(uniforms.power)) * uniforms.strength * compensator;
+    return pow(sampleGradient(normalized), vec3(uniforms.power)) * uniforms.strength * compensator / uniforms.grid_scale;
 }
 
 vec3 sampleGradient(float factor) {

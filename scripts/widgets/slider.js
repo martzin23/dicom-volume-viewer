@@ -18,6 +18,11 @@ export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slide
     element_slider.setAttribute("min", "0");
     element_slider.setAttribute("max", RESOLUTION);
     element_slider.setAttribute("value", mapRange(default_value, min, max, 0, RESOLUTION));
+    element_slider.addEventListener("input", function() {
+        const value = mapRange(this.value, 0, RESOLUTION, min, max);
+        if (inputs) element_text.value = resizeNumber(value);
+        set(value);
+    });
 
     if (inputs) {
         element_text.addEventListener("focusout", function() {
@@ -29,12 +34,6 @@ export function createSlider(set = (value) => {}, get = () => 0.0, name = "Slide
             } else {
                 this.value = resizeNumber(get());
             }
-        });
-    
-        element_slider.addEventListener("input", function() {
-            const value = mapRange(this.value, 0, RESOLUTION, min, max);
-            if (inputs) element_text.value = resizeNumber(value);
-            set(value);
         });
         
         element_text.addEventListener("updategui", function() {

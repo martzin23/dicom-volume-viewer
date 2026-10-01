@@ -42,7 +42,7 @@ export default class WebGLManager {
             buffer_size: new Vector2D(this.base_render_size.x, this.base_render_size.y),
 
             grid_size: new Vector3D(this.volume_texture.width, this.volume_texture.height, this.volume_texture.depth),
-            render_scale: 1,
+            render_scale: 0.5,
             
             camera_rotation: new Matrix(1.0),
             camera_position: new Vector3D(0.0, -3.0, 0.0),
