@@ -137,7 +137,7 @@ export default class WebGLManager {
     reloadImage(volume) {
         this.volume_texture.destroy(this.gl);
         this.volume_texture = new WebGL.Texture(volume.data, volume.rows, volume.columns, volume.depth);
-        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "NEAREST", "CLAMP_TO_EDGE", "R32F");
+        this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "LINEAR", "CLAMP_TO_EDGE", "R32F");
         this.uniforms.grid_size.x = this.volume_texture.width;
         this.uniforms.grid_size.y = this.volume_texture.height;
         this.uniforms.grid_size.z = this.volume_texture.depth;
