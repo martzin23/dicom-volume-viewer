@@ -1,6 +1,5 @@
 import * as Pointer from '../utility/pointer.js';
 import Matrix from '../math/matrix.js';
-import Vector from '../math/vector.js';
 import Vector3D from '../math/vector3d.js';
 import Vector2D from '../math/vector2d.js';
 
@@ -63,7 +62,7 @@ export default class Camera {
         document.addEventListener('wheel', (event) => {
             if (this.scrollable)
                 this.speed.z = (event.deltaY < 0) ? -this.zoom_sensitivity : this.zoom_sensitivity;
-        });
+        }, { passive: true });
 
         Pointer.addTouchListener(canvas, (event) => {
             this.speed = new Vector3D(event.drag_x * this.rotation_sensitivity, event.drag_y * this.rotation_sensitivity, event.zoom * this.zoom_sensitivity);

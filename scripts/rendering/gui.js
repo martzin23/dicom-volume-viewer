@@ -1,30 +1,45 @@
+import * as DICOM from "../utility/dicom_parser.js";
+import Vector3D from '../math/vector3d.js';
 import switchAttribute from '../utility/switch_attribute.js';
+import { allDefined } from 'https://ka-f.webawesome.com/webawesome@3.14.0/webawesome.js';
 import { createDrag } from '../widgets/drag.js';
 import { switchSetIndex } from '../widgets/switch.js';
 import { createToggle } from '../widgets/toggle.js';
 import { setupAddTooltip } from '../widgets/tooltip.js';
 import { createCollapse } from "../widgets/collapse.js";
-import * as DICOM from "../utility/dicom_parser.js";
-import Vector3D from '../math/vector3d.js';
 import { createRange } from '../widgets/range.js';
 import { createSlider } from '../widgets/slider.js';
 import { createCurve } from '../widgets/curve.js';
-import Matrix from "../math/matrix.js";
-import Vector from "../math/vector.js";
-import { allDefined } from 'https://ka-f.webawesome.com/webawesome@3.14.0/webawesome.js';
 import { createButton } from '../widgets/button.js';
 import { createSliderRadio } from '../widgets/slider_radio.js';
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
         this.current_tab = 0;
-        this.key_states = {};
-        this.mouse_states = [false, false, false, false, false];
         this.update_event = new CustomEvent('updategui', {bubbles: true, cancelable: true });
+        this.triggered = false;
+        this.timeout;
 
-        this.setupListeners(gpu);
+        this.setupListeners(canvas);
         this.setupWidgets(gpu, camera);
         this.update_handler = setInterval(() => { this.updateValues(); }, 500);
+    }
+
+    isTriggered() {
+        return this.triggered;
+    }
+
+    trigger(delay = 500) {
+        const indicator = document.getElementById("time");
+        clearTimeout(this.timeout);
+        this.triggered = true;
+        indicator.classList.add("fa-play");
+        indicator.classList.remove("fa-pause");
+        this.timeout = setTimeout(() => {
+            this.triggered = false;
+            indicator.classList.remove("fa-play");
+            indicator.classList.add("fa-pause");
+        }, delay);
     }
 
     toggleFullscreen() {
@@ -50,26 +65,6 @@ export default class GUIManager {
         return (document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement) !== undefined;
     }
 
-    isTyping() {
-        return (document.activeElement.type === 'text') || (document.activeElement.nodeName === 'TEXTAREA');
-    }
-
-    isKeyPressed() {
-        let pressed = false;
-        for (const key in this.key_states)
-            if (this.key_states[key] === true)
-                pressed = true;
-        return pressed;
-    }
-
-    isMousePressed() {
-        let pressed = false;
-        this.mouse_states.forEach(button => {
-            if (button) pressed = true;
-        });
-        return pressed;
-    }
-
     updateValues() {
         document.querySelectorAll("menu *").forEach(element => {element.dispatchEvent(this.update_event);});
     }
@@ -93,7 +88,7 @@ export default class GUIManager {
         }
     }
 
-    setupListeners(gpu) {
+    setupListeners(canvas) {
         ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach((eventType) => {
             document.addEventListener(eventType, () => {
                 const menu = document.getElementById("menu");
@@ -104,37 +99,18 @@ export default class GUIManager {
                     menu.classList.add("hidden");
             })
         });
+
+        document.addEventListener('pointerdown', (event) => {
+            this.trigger();
+        });
+
+        document.addEventListener("pointermove", (event) => {
+            if (event.button !== -1)
+                this.trigger();
+        })
         
-        document.addEventListener('keydown', (event) => {
-            this.key_states[event.key] = true;
-            switch (event.key) {
-                case "ArrowUp":
-                    if (this.isTyping()) return;
-                    gpu.uniforms.render_scale = Math.min(gpu.uniforms.render_scale * 2, 1.0);
-                    gpu.synchronize();
-                    break;
-                case "ArrowDown":
-                    if (this.isTyping()) return;
-                    gpu.uniforms.render_scale = Math.max(gpu.uniforms.render_scale / 2, 0.1);
-                    gpu.synchronize();
-                    break;
-                case "F11":
-                    event.preventDefault();
-                    this.toggleFullscreen();
-                    break;
-            }
-        });
-
-        document.addEventListener('keyup', (event) => {
-            this.key_states[event.key] = false;
-        });
-
-        document.addEventListener('mousedown', (event) => {
-            this.mouse_states[event.button] = true;
-        });
-
-        document.addEventListener('mouseup', (event) => {
-            this.mouse_states[event.button] = false;
+        canvas.addEventListener("wheel", (event) => {
+            this.trigger();
         });
     }
 
@@ -157,6 +133,7 @@ export default class GUIManager {
             gpu.reloadImage(volume);
             camera.position = new Vector3D(volume.columns, volume.columns, volume.columns);
             camera.updateOrbit();
+            this.trigger(2000);
         });
         group_general.appendChild(element_input);
         group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
@@ -164,7 +141,7 @@ export default class GUIManager {
         menu.appendChild(group_general);
         
         const group_grid = createCollapse("Grid", "fa-cubes", true);
-        group_grid.appendChild(createSliderRadio((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", [0.5, 1.0, 2.0, 4.0], ["Half", "Full", "Double", "Quad"]));
+        group_grid.appendChild(createSliderRadio((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", [0.5, 1.0, 2.0, 4.0, 8.0], ["0.5x", "1x", "2x", "4x", "8x"]));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.x = value;}, () => gpu.uniforms.grid_stretch.x, "Grid stretch X", 0, Infinity, 0.01));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.y = value;}, () => gpu.uniforms.grid_stretch.y, "Grid stretch Y", 0, Infinity, 0.01));
         group_grid.appendChild(createDrag((value) => {gpu.uniforms.grid_stretch.z = value;}, () => gpu.uniforms.grid_stretch.z, "Grid stretch Z", 0, Infinity, 0.01));

@@ -146,7 +146,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
             case 1:
                 addPoint(0, 0.9999999364217163, "#000000", true);
                 addPoint(0.06844106075412791, 0.9530506163882817, "#000000", false);
-                addPoint(0.10076045460891196, 0.03876488757038831, "#57fcff", false);
+                addPoint(0.10076045460891196, 0.03876488757038831, "#b0cbf6", false);
                 addPoint(0.12927756907339485, 0.9578125026822089, "#000000", false);
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.05248;
@@ -163,9 +163,9 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
                 break;
             case 3:
                 addPoint(0, 0.9999999364217163, "#000000", true);
-                addPoint(0.1178707182110086, 0.0625744461965913, "#65eaec", false);
+                addPoint(0.1178707182110086, 0.0625744461965913, "#dbe9ff", false);
                 addPoint(0.17680608048938357, 0.9197172851742246, "#000000", false);
-                addPoint(0.2205323252065539, 0.2197172661007394, "#f0c1c1", false);
+                addPoint(0.2205323252065539, 0.2197172661007394, "#eebebe", false);
                 addPoint(0.2832699541837473, 0.9006696128419487, "#000000", false);
                 addPoint(0.34220531646212227, 0.16257443983876294, "#ffffff", false);
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
