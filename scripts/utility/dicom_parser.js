@@ -1,64 +1,67 @@
 
-function parseDicomToFloat32(arrayBuffer) {
-	const byteArray = new Uint8Array(arrayBuffer);
-	const dataSet = dicomParser.parseDicom(byteArray);
+function bufferToSlice(buffer) {
+	const data = dicomParser.parseDicom(new Uint8Array(buffer));
 
-	// --- Core image geometry tags ---
-	const rows = dataSet.uint16("x00280010"); // Rows
-	const columns = dataSet.uint16("x00280011"); // Columns
-	const bitsAllocated = dataSet.uint16("x00280100"); // BitsAllocated
-	const pixelRepresentation = dataSet.uint16("x00280103"); // 0 = unsigned, 1 = signed
-	const samplesPerPixel = dataSet.uint16("x00280002") || 1;
-	const numberOfFrames = parseInt(dataSet.string("x00280008") || "1", 10);
+	const Rows = data.uint16("x00280010");
+	const Columns = data.uint16("x00280011");
+	const BitsAllocated = data.uint16("x00280100");
+	const PixelRepresentation = data.uint16("x00280103");
+	const SamplesPerPixel = data.uint16("x00280002") || 1;
+	if (SamplesPerPixel !== 1) throw new Error("Pixel value is not grayscale.")
+	const NumberOfFrames = parseInt(data.string("x00280008") || "1", 10);
+	if (NumberOfFrames !== 1) throw new Error("Slice is multi layered.")
+	const layerIndex = parseFloat(data.string("x00200032", 2)) || 0;
+	const RescaleSlope = parseFloat(data.string("x00281053")) || 1;
+	const RescaleIntercept = parseFloat(data.string("x00281052")) || 0;
+	const [PixelSpacingRow, PixelSpacingColumn] = [parseFloat(data.string("x00280030", 0)) || 1, parseFloat(data.string("x00280030", 1)) || 1];
+	const SliceThickness = data.string("x00180050") || 1;
 
-	// --- Rescale to real-world units (e.g. Hounsfield units for CT) ---
-	const slope = parseFloat(dataSet.string("x00281053")) || 1; // RescaleSlope
-	const intercept = parseFloat(dataSet.string("x00281052")) || 0; // RescaleIntercept
-
-	// --- Raw pixel data element ---
-	const pixelDataElement = dataSet.elements.x7fe00010;
+	const pixelDataElement = data.elements.x7fe00010;
 	if (!pixelDataElement) {
 		throw new Error("No PixelData element found in this DICOM file.");
 	}
 
 	let rawPixels;
-	if (bitsAllocated === 16) {
+	if (BitsAllocated === 16) {
 		rawPixels =
-			pixelRepresentation === 1
-				? new Int16Array(arrayBuffer, pixelDataElement.dataOffset, pixelDataElement.length / 2)
-				: new Uint16Array(arrayBuffer, pixelDataElement.dataOffset, pixelDataElement.length / 2);
-	} else if (bitsAllocated === 8) {
-		rawPixels = new Uint8Array(arrayBuffer, pixelDataElement.dataOffset, pixelDataElement.length);
+			PixelRepresentation === 1
+			? new Int16Array(buffer, pixelDataElement.dataOffset, pixelDataElement.length / 2)
+			: new Uint16Array(buffer, pixelDataElement.dataOffset, pixelDataElement.length / 2);
+	} else if (BitsAllocated === 8) {
+		rawPixels = new Uint8Array(buffer, pixelDataElement.dataOffset, pixelDataElement.length);
 	} else {
-		throw new Error(`Unsupported BitsAllocated: ${bitsAllocated}`);
+		throw new Error(`Unsupported BitsAllocated: ${BitsAllocated}`);
 	}
 
 	const voxelCount = rawPixels.length;
 	const floatData = new Float32Array(voxelCount);
 	for (let i = 0; i < voxelCount; i++) {
-		floatData[i] = rawPixels[i] * slope + intercept;
+		floatData[i] = rawPixels[i] * RescaleSlope + RescaleIntercept;
 	}
+
+	// fix multiple colors
+
+	// Modality
+	// RescaleType
+	// RescaleValues
+	// value range
+	// volume size
+	// physical size
+	// number of voxels
 
 	return {
 		data: floatData,
-		rows,
-		columns,
-		numberOfFrames,
-		samplesPerPixel,
-		slope,
-		intercept,
-		getPixel(x, y) {
-			return this.data[y * this.columns + x];
-		},
-		getVoxel(x, y, z) {
-			const frameSize = this.rows * this.columns;
-			return this.data[z * frameSize + y * this.columns + x];
-		},
+		rows: Rows,
+		depth: NumberOfFrames,
+		columns: Columns,
+		z: layerIndex,
+		pixel_length: PixelSpacingRow,
+		pixel_width: PixelSpacingColumn,
+		pixel_height: SliceThickness,
 	};
 }
 
-function buildVolumeFromSlices(sliceArrayBuffers) {
-	const slices = sliceArrayBuffers.map(parseDicomToFloat32);
+function slicesToVolume(slices) {
 	const { rows, columns } = slices[0];
 	const depth = slices.length;
 	const volume = new Float32Array(rows * columns * depth);
@@ -67,44 +70,30 @@ function buildVolumeFromSlices(sliceArrayBuffers) {
 		volume.set(slice.data, z * rows * columns);
 	});
 
-	let min = Infinity;
-	let max = -Infinity;
-	for (let x = 0; x < rows * columns * depth; x++) {
-		let value = volume[x];
-		min = Math.min(min, value);
-		max = Math.max(max, value);
-	}
-	console.log(min, max);
+	// let min = Infinity;
+	// let max = -Infinity;
+	// for (let x = 0; x < rows * columns * depth; x++) {
+	// 	let value = volume[x];
+	// 	min = Math.min(min, value);
+	// 	max = Math.max(max, value);
+	// }
+	// console.log(min, max);
 
 	return {
 		data: volume,
-		rows,
-		columns,
-		depth,
-		getVoxel(x, y, z) {
-			return this.data[z * this.rows * this.columns + y * this.columns + x];
-		},
+		rows: rows,
+		columns: columns,
+		depth: depth,
+		stretch_x: 1.0,
+		stretch_y: slices[0].pixel_width / slices[0].pixel_length,
+		stretch_z: slices[0].pixel_height / slices[0].pixel_length,
 	};
 }
 
-async function sortFilesByPosition(fileList) {
-	const withMeta = await Promise.all(
-		Array.from(fileList).map(async (file) => {
-			const buffer = await file.arrayBuffer();
-			const dataSet = dicomParser.parseDicom(new Uint8Array(buffer));
-			const position = dataSet.string("x00200032");
-			const z = position ? parseFloat(position.split("\\")[2]) : 0;
-			return { file, z };
-		}),
-	);
-
-	return withMeta.sort((a, b) => a.z - b.z).map((item) => item.file);
-}
-
-export async function dicomToVolume(fileList) {
-	fileList = await sortFilesByPosition(fileList);
-	const buffers = await Promise.all(Array.from(fileList).map((f) => f.arrayBuffer()));
-	const volume = buildVolumeFromSlices(buffers);
+export async function dicomToVolume(files) {
+	const buffers = await Promise.all(Array.from(files).map((f) => f.arrayBuffer()));
+	const slices = buffers.map(bufferToSlice).sort((a, b) => a.z - b.z);
+	const volume = slicesToVolume(slices);
 	return volume;
 }
 

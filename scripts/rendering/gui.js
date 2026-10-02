@@ -12,6 +12,7 @@ import { createSlider } from '../widgets/slider.js';
 import { createCurve } from '../widgets/curve.js';
 import { createButton } from '../widgets/button.js';
 import { createSliderRadio } from '../widgets/slider_radio.js';
+import { createInfo } from "../widgets/info.js";
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -119,10 +120,14 @@ export default class GUIManager {
         setupAddTooltip();
         await allDefined();
         document.documentElement.classList.toggle('wa-dark');
-
         const menu = document.getElementById("menu");
 
         const group_general = createCollapse("General", "fa-gear", true);
+        group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
+        group_general.appendChild(createSliderRadio((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", [0.1, 0.25, 0.5, 1.0], ["Low", "Quarter", "Half", "Full"]));
+        menu.appendChild(group_general);
+        
+        const group_file = createCollapse("File", "fa-file", true);
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -136,10 +141,9 @@ export default class GUIManager {
             camera.updateOrbit();
             this.trigger(2000);
         });
-        group_general.appendChild(element_input);
-        group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
-        group_general.appendChild(createSliderRadio((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", [0.1, 0.25, 0.5, 1.0], ["Low", "Quarter", "Half", "Full"]));
-        menu.appendChild(group_general);
+        group_file.appendChild(element_input);
+        group_file.appendChild(createInfo("File(s) info", ["test1", "test2"], [1, 2]));
+        menu.appendChild(group_file);
         
         const group_grid = createCollapse("Grid", "fa-cubes", true);
         group_grid.appendChild(createSliderRadio((value) => {gpu.uniforms.grid_scale = value;}, () => gpu.uniforms.grid_scale, "Voxel multiplier", [0.5, 1.0, 2.0, 4.0, 8.0], ["0.5x", "1x", "2x", "4x", "8x"]));

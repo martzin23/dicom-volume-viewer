@@ -1,0 +1,27 @@
+
+.info {
+    background-color: var(--lighten);
+    box-shadow: var(--shadow-highlight);
+    border-radius: var(--roundness);
+    padding: 1rem;
+}
+
+.info>* {
+    border-width: 0px;
+    border-bottom-width: 1px;
+    border-style: solid;
+    border-image: radial-gradient(circle, var(--lighten) 50%, transparent 100%) 1;
+}
+.info>div>*:first-child {
+    border-right: 1px solid  var(--lighten);
+}
+
+.info>div>* {
+    padding-top: 0.25rem;
+    padding-left: 1rem;
+}
+
+.info>div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}

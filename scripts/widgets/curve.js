@@ -36,8 +36,6 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         
         const move_handler = function(event) {
             const rect = element_base.getBoundingClientRect();
-            // element_color.style.left = (event.clientX - rect.left) + "px";
-            // element_color.style.top = (event.clientY - rect.top) + "px";
             element_color.setPosition((event.clientX - rect.left) / rect.width, (event.clientY - rect.top) / rect.height);
             update();
             previous_top.style.zIndex = 1;
@@ -77,8 +75,6 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         }
 
         element_color.getPosition = () => {
-            // const rect = element_color.parent.getBoundingClientRect();
-            // return new Vector2D(element_color.offsetLeft / rect.width, element_color.offsetTop / rect.height);
             return element_color.position;
         }
 

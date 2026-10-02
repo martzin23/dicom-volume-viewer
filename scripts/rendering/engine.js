@@ -5,11 +5,8 @@ import FPSCounter from '../utility/fps.js';
 import Vector2D from '../math/vector2d.js';
 
 // TODO
-// lazy rendering
-
 // parser rewrite
 // support dicomdir
-// stretching fix
 // range fix
 
 class Engine {

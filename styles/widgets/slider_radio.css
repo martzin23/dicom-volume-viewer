@@ -1,6 +1,3 @@
-.slider-radio wa-slider.wide {
-    width: 100%;
-}
 
 .slider-radio {
     width: calc(100% - 2rem);
@@ -10,4 +7,12 @@
     gap: 1rem;
     align-items: center;
     justify-content: start;
+}
+
+.slider-radio>wa-slider.wide {
+    width: 100%;
+}
+
+.slider-radio>p {
+    white-space: nowrap;
 }

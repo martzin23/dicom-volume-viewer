@@ -141,7 +141,7 @@ export default class WebGLManager {
         this.uniforms.grid_size.x = this.volume_texture.width;
         this.uniforms.grid_size.y = this.volume_texture.height;
         this.uniforms.grid_size.z = this.volume_texture.depth;
-        this.uniforms.grid_stretch = new Vector3D(1.0, this.volume_texture.width / this.volume_texture.height, this.volume_texture.width / this.volume_texture.depth);
+        this.uniforms.grid_stretch = new Vector3D(volume.stretch_x, volume.stretch_y, volume.stretch_z);
     }
 }
 
