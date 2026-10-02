@@ -128,6 +128,7 @@ export default class GUIManager {
         menu.appendChild(group_general);
         
         const group_file = createCollapse("File", "fa-file", true);
+        const element_info = createInfo("File(s) info", ["Modality", "RescaleType", "Value Range", "Volume Size", "Physical Size"], []);
         const element_input = document.createElement("input");
         element_input.type = "file";
         element_input.setAttribute("webkitdirectory", true);
@@ -137,12 +138,13 @@ export default class GUIManager {
             const volume = await DICOM.dicomToVolume(files);
             // const volume = await DICOM.dicomdirToVolume(files);
             gpu.reloadImage(volume);
-            camera.position = new Vector3D(volume.columns, volume.columns, volume.columns);
+            camera.position = new Vector3D(volume.size.x, volume.size.x, volume.size.x);
             camera.updateOrbit();
+            element_info.updateValues([volume.modality, volume.rescale, `(${volume.range.x}, ${volume.range.y})`, `${volume.size.x} x ${volume.size.y} x ${volume.size.z}`, `${Math.round(volume.dimensions.x)}mm x ${Math.round(volume.dimensions.y)}mm x ${Math.round(volume.dimensions.z)}mm`])
             this.trigger(2000);
         });
         group_file.appendChild(element_input);
-        group_file.appendChild(createInfo("File(s) info", ["test1", "test2"], [1, 2]));
+        group_file.appendChild(element_info);
         menu.appendChild(group_file);
         
         const group_grid = createCollapse("Grid", "fa-cubes", true);

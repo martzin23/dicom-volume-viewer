@@ -136,12 +136,20 @@ export default class WebGLManager {
 
     reloadImage(volume) {
         this.volume_texture.destroy(this.gl);
-        this.volume_texture = new WebGL.Texture(volume.data, volume.rows, volume.columns, volume.depth);
+        this.volume_texture = new WebGL.Texture(volume.data, volume.size.x, volume.size.y, volume.size.z);
         this.volume_texture.setup(this.gl, "volume_texture", this.program, 0, "LINEAR", "CLAMP_TO_EDGE", "R32F");
+        if (volume.rescale !== "HU" && volume.modality !== "CT") {
+            this.uniforms.range_min = volume.range.x;
+            this.uniforms.range_max = volume.range.y;
+        }
         this.uniforms.grid_size.x = this.volume_texture.width;
         this.uniforms.grid_size.y = this.volume_texture.height;
         this.uniforms.grid_size.z = this.volume_texture.depth;
-        this.uniforms.grid_stretch = new Vector3D(volume.stretch_x, volume.stretch_y, volume.stretch_z);
+        this.uniforms.grid_stretch = new Vector3D(
+            1.0, 
+            (volume.size.x / volume.size.y) / (volume.dimensions.x / volume.dimensions.y), 
+            (volume.size.x / volume.size.z) / (volume.dimensions.x / volume.dimensions.z)
+        );
     }
 }
 

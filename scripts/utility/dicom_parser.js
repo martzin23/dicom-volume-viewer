@@ -1,3 +1,5 @@
+import Vector2D from "../math/vector2d.js";
+import Vector3D from "../math/vector3d.js";
 
 function bufferToSlice(buffer) {
 	const data = dicomParser.parseDicom(new Uint8Array(buffer));
@@ -15,6 +17,8 @@ function bufferToSlice(buffer) {
 	const RescaleIntercept = parseFloat(data.string("x00281052")) || 0;
 	const [PixelSpacingRow, PixelSpacingColumn] = [parseFloat(data.string("x00280030", 0)) || 1, parseFloat(data.string("x00280030", 1)) || 1];
 	const SliceThickness = data.string("x00180050") || 1;
+	const Modality = data.string('x00080060');
+	const RescaleType = data.string('x00281054');
 
 	const pixelDataElement = data.elements.x7fe00010;
 	if (!pixelDataElement) {
@@ -39,16 +43,6 @@ function bufferToSlice(buffer) {
 		floatData[i] = rawPixels[i] * RescaleSlope + RescaleIntercept;
 	}
 
-	// fix multiple colors
-
-	// Modality
-	// RescaleType
-	// RescaleValues
-	// value range
-	// volume size
-	// physical size
-	// number of voxels
-
 	return {
 		data: floatData,
 		rows: Rows,
@@ -58,6 +52,8 @@ function bufferToSlice(buffer) {
 		pixel_length: PixelSpacingRow,
 		pixel_width: PixelSpacingColumn,
 		pixel_height: SliceThickness,
+		modality: Modality,
+		rescale: RescaleType,
 	};
 }
 
@@ -70,23 +66,21 @@ function slicesToVolume(slices) {
 		volume.set(slice.data, z * rows * columns);
 	});
 
-	// let min = Infinity;
-	// let max = -Infinity;
-	// for (let x = 0; x < rows * columns * depth; x++) {
-	// 	let value = volume[x];
-	// 	min = Math.min(min, value);
-	// 	max = Math.max(max, value);
-	// }
-	// console.log(min, max);
+	let min = Infinity;
+	let max = -Infinity;
+	for (let x = 0; x < rows * columns * depth; x++) {
+		let value = volume[x];
+		min = Math.min(min, value);
+		max = Math.max(max, value);
+	}
 
 	return {
 		data: volume,
-		rows: rows,
-		columns: columns,
-		depth: depth,
-		stretch_x: 1.0,
-		stretch_y: slices[0].pixel_width / slices[0].pixel_length,
-		stretch_z: slices[0].pixel_height / slices[0].pixel_length,
+		size: new Vector3D(rows, columns, depth),
+		dimensions: new Vector3D(slices[0].pixel_length * rows, slices[0].pixel_width * columns, slices[0].pixel_height * depth),
+		range: new Vector2D(min, max),
+		modality: slices[0].modality,
+		rescale: slices[0].rescale,
 	};
 }
 

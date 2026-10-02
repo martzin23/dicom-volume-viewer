@@ -11,7 +11,6 @@ export function createInfo(name = "Info", labels = [], values = []) {
     let element_labels = [];
     let element_values = [];
     for (let i=0; i<labels.length; i++) {
-        console.log(labels, values);
         const element_container = document.createElement("div");
         element_container.className = "row"
 

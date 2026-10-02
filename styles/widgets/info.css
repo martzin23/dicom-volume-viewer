@@ -12,8 +12,20 @@
     border-style: solid;
     border-image: radial-gradient(circle, var(--lighten) 50%, transparent 100%) 1;
 }
+
 .info>div>*:first-child {
     border-right: 1px solid  var(--lighten);
+    /* color: var(--accent-light); */
+    /* font-weight: bold; */
+    /* text-shadow: 1px 1px 0px var(--shadow); */
+}
+
+
+.info>div>*:last-child {
+    font-family: monospace;
+    width: max-content;
+    color: var(--text-muted);
+    /* font-size: 0.75rem; */
 }
 
 .info>div>* {
@@ -23,5 +35,5 @@
 
 .info>div {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
 }
