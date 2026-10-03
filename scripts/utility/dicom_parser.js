@@ -18,7 +18,6 @@ function bufferToSlice(buffer) {
 	const [PixelSpacingRow, PixelSpacingColumn] = [parseFloat(data.string("x00280030", 0)) || 1, parseFloat(data.string("x00280030", 1)) || 1];
 	const SliceThickness = data.string("x00180050") || 1;
 	const Modality = data.string('x00080060');
-	const RescaleType = data.string('x00281054');
 
 	const pixelDataElement = data.elements.x7fe00010;
 	if (!pixelDataElement) {
@@ -53,7 +52,8 @@ function bufferToSlice(buffer) {
 		pixel_width: PixelSpacingColumn,
 		pixel_height: SliceThickness,
 		modality: Modality,
-		rescale: RescaleType,
+		slope: RescaleSlope,
+		intercept: RescaleIntercept,
 	};
 }
 
@@ -80,13 +80,15 @@ function slicesToVolume(slices) {
 		dimensions: new Vector3D(slices[0].pixel_length * rows, slices[0].pixel_width * columns, slices[0].pixel_height * depth),
 		range: new Vector2D(min, max),
 		modality: slices[0].modality,
-		rescale: slices[0].rescale,
+		intercept: slices[0].intercept,
+		slope: slices[0].slope,
 	};
 }
 
 export async function dicomToVolume(files) {
 	const buffers = await Promise.all(Array.from(files).map((f) => f.arrayBuffer()));
 	const slices = buffers.map(bufferToSlice).sort((a, b) => a.z - b.z);
+	// const slices = buffers.map(bufferToSlice);
 	const volume = slicesToVolume(slices);
 	return volume;
 }

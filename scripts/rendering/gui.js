@@ -122,26 +122,37 @@ export default class GUIManager {
         document.documentElement.classList.toggle('wa-dark');
         const menu = document.getElementById("menu");
 
-        const group_general = createCollapse("General", "fa-gear", true);
-        group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
+        const group_general = createCollapse("Display", "fa-display", true);
         group_general.appendChild(createSliderRadio((value) => {gpu.uniforms.render_scale = value; gpu.synchronize();},() => gpu.uniforms.render_scale , "Resolution", [0.1, 0.25, 0.5, 1.0], ["Low", "Quarter", "Half", "Full"]));
+        group_general.appendChild(createToggle((value) => { this.toggleFullscreen(); }, () => this.isFullscreen(), "Fullscreen"));
         menu.appendChild(group_general);
         
         const group_file = createCollapse("File", "fa-file", true);
-        const element_info = createInfo("File(s) info", ["Modality", "RescaleType", "Value Range", "Volume Size", "Physical Size"], []);
+        const element_info = createInfo("Volume information", ["Modality", "Physical Size", "Volume Size", "Value Range", "Rescale Values"], []);
         const element_input = document.createElement("input");
         element_input.type = "file";
-        element_input.setAttribute("webkitdirectory", true);
+        // element_input.setAttribute("webkitdirectory", true);
         element_input.setAttribute("multiple", true);
         element_input.addEventListener("change", async (event) => {
             const files = event.target.files;
-            const volume = await DICOM.dicomToVolume(files);
-            // const volume = await DICOM.dicomdirToVolume(files);
-            gpu.reloadImage(volume);
-            camera.position = new Vector3D(volume.size.x, volume.size.x, volume.size.x);
-            camera.updateOrbit();
-            element_info.updateValues([volume.modality, volume.rescale, `(${volume.range.x}, ${volume.range.y})`, `${volume.size.x} x ${volume.size.y} x ${volume.size.z}`, `${Math.round(volume.dimensions.x)}mm x ${Math.round(volume.dimensions.y)}mm x ${Math.round(volume.dimensions.z)}mm`])
-            this.trigger(2000);
+            try {
+                const volume = await DICOM.dicomToVolume(files);
+                // const volume = await DICOM.dicomdirToVolume(files);
+                gpu.reloadImage(volume);
+                camera.position = new Vector3D(volume.size.x, volume.size.x, volume.size.x);
+                camera.updateOrbit();
+                element_info.updateValues([
+                    volume.modality, 
+                    `${Math.round(volume.dimensions.x)}mm x ${Math.round(volume.dimensions.y)}mm x ${Math.round(volume.dimensions.z)}mm`,
+                    `${volume.size.x} x ${volume.size.y} x ${volume.size.z}`, 
+                    `(${volume.range.x}, ${volume.range.y})`, 
+                    `(${volume.slope}, ${volume.intercept})`, 
+                ])
+                this.trigger(2000);
+            } catch (error) {
+                // throw new Error(error);
+                throw error;
+            }
         });
         group_file.appendChild(element_input);
         group_file.appendChild(element_info);
@@ -164,7 +175,7 @@ export default class GUIManager {
             })
             group_density.appendChild(element_curve);
             element_curve.setPower(gpu.uniforms.power);
-            group_density.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.1));
+            group_density.appendChild(createSlider((value) => {gpu.uniforms.strength = value;}, () => gpu.uniforms.strength, "Strength", 0.001, 0.2));
             group_density.appendChild(createSlider((value) => {gpu.uniforms.power = value; element_curve.setPower(value);}, () => gpu.uniforms.power, "Power", 1, 10));
             group_density.appendChild(createDrag((value) => {gpu.uniforms.range_min = value;}, () => gpu.uniforms.range_min, "Range Min", -Infinity, Infinity, 1));
             group_density.appendChild(createDrag((value) => {gpu.uniforms.range_max = value;}, () => gpu.uniforms.range_max, "Range Max", -Infinity, Infinity, 1));

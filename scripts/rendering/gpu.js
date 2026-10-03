@@ -60,7 +60,7 @@ export default class WebGLManager {
             power: 1.0,
 
             map_size: 0.0,
-            range_min: 1024.0,
+            range_min: -1024.0,
             range_max: 3071.0,
             padding_c: 0.0,
 
