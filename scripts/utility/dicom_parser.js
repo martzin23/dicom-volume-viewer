@@ -12,7 +12,6 @@ function bufferToSlice(buffer) {
 	if (SamplesPerPixel !== 1) throw new Error("Unsupported format: Pixel values are not grayscale.")
 	const NumberOfFrames = parseInt(data.string("x00280008") || "1", 10);
 	if (NumberOfFrames !== 1) throw new Error("Unsupported format: File contains a multi layered slice.")
-	const layerIndex = parseFloat(data.string("x00200032", 2)) || 0;
 	const RescaleSlope = parseFloat(data.string("x00281053")) || 1;
 	const RescaleIntercept = parseFloat(data.string("x00281052")) || 0;
 	const [PixelSpacingRow, PixelSpacingColumn] = [parseFloat(data.string("x00280030", 0)) || 1, parseFloat(data.string("x00280030", 1)) || 1];
@@ -42,12 +41,25 @@ function bufferToSlice(buffer) {
 		floatData[i] = rawPixels[i] * RescaleSlope + RescaleIntercept;
 	}
 
+	const iop = [0, 1, 2, 3, 4, 5].map(i => parseFloat(data.string('x00200037', i)));
+	const ipp = [0, 1, 2].map(i => parseFloat(data.string('x00200032', i)));
+
+	const rowCosines = iop.slice(0, 3);
+	const colCosines = iop.slice(3, 6);
+
+	const normal = [
+		rowCosines[1] * colCosines[2] - rowCosines[2] * colCosines[1],
+		rowCosines[2] * colCosines[0] - rowCosines[0] * colCosines[2],
+		rowCosines[0] * colCosines[1] - rowCosines[1] * colCosines[0],
+	];
+	const index = normal[0] * ipp[0] + normal[1] * ipp[1] + normal[2] * ipp[2];
+
 	return {
 		data: floatData,
 		rows: Rows,
 		columns: Columns,
 		depth: NumberOfFrames,
-		z: layerIndex,
+		index: index,
 		pixel_length: PixelSpacingRow,
 		pixel_width: PixelSpacingColumn,
 		pixel_height: SliceThickness,
@@ -87,7 +99,7 @@ function slicesToVolume(slices) {
 
 export async function dicomToVolume(files, size_limit) {
 	const buffers = await Promise.all(Array.from(files).map((f) => f.arrayBuffer()));
-	const slices = buffers.map(bufferToSlice).sort((a, b) => a.z - b.z).map((slice) => {return rescaleSlice(slice, size_limit)});
+	const slices = buffers.map(bufferToSlice).sort((a, b) => a.index - b.index).map((slice) => {return rescaleSlice(slice, size_limit)});
 	const volume = slicesToVolume(slices);
 	return volume;
 }
