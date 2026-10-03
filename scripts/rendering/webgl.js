@@ -109,6 +109,7 @@ export function createTexture(gl, width, height, depth = null, format = "RGBA8",
     }
     else {
         gl.bindTexture(gl.TEXTURE_3D, texture);
+        console.log(width, height, depth)
         gl.texImage3D(gl.TEXTURE_3D, 0, gl[format], width, height, depth, 0, gl[formats[format].channels], gl[formats[format].type], data);
         // gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl[(formats[format].filterable) ? "LINEAR" : "NEAREST"]);
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
@@ -117,8 +118,29 @@ export function createTexture(gl, width, height, depth = null, format = "RGBA8",
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_T, gl[wrap_mode]);
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_R, gl[wrap_mode]);
         gl.bindTexture(gl.TEXTURE_3D, null);
+        checkForErrors(gl);
     }
     return texture;
+}
+
+export function checkForErrors(gl) {
+    const errors = {
+        [gl.NO_ERROR]: 'NO_ERROR',
+        [gl.INVALID_ENUM]: 'INVALID_ENUM',
+        [gl.INVALID_VALUE]: 'INVALID_VALUE',
+        [gl.INVALID_OPERATION]: 'INVALID_OPERATION',
+        [gl.INVALID_FRAMEBUFFER_OPERATION]: 'INVALID_FRAMEBUFFER_OPERATION',
+        [gl.OUT_OF_MEMORY]: 'OUT_OF_MEMORY',
+        [gl.CONTEXT_LOST_WEBGL]: 'CONTEXT_LOST_WEBGL',
+    };
+
+    let message = "";
+    let error = gl.getError();
+    while (error !== gl.NO_ERROR) {
+        message += "WebGL " + errors[error] + "\n";
+        error = gl.getError();
+    }
+    if (message) throw new Error(message);
 }
 
 export function textureToImage(gl, texture, width, height) {
@@ -174,5 +196,6 @@ export class Texture {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.format], this.width, this.height, 0, gl[formats[this.format].channels], gl[formats[this.format].type], data);
         else
             gl.texImage3D(gl.TEXTURE_3D, 0, gl[this.format], this.width, this.height, this.depth, 0, gl[formats[this.format].channels], gl[formats[this.format].type], data);
+        checkForErrors();
     } 
 }

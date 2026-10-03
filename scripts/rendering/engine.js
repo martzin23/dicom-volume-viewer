@@ -8,14 +8,16 @@ import Vector2D from '../math/vector2d.js';
 // support dicomdir
 // fix multiple colors
 // fix multiple layers
-// fix stretching
+// fix slice sorting
 
 class Engine {
     static async initialize() {
-        window.addEventListener("error", (event) => {
-            document.getElementById("popup").classList.remove("hidden");
-            document.getElementById("popup-message").innerText = event.error;
-        });
+        ["error", "unhandledrejection"].forEach((type) => {
+            window.addEventListener(type, (event) => {
+                document.getElementById("popup").classList.remove("hidden");
+                document.getElementById("popup-message").innerText = event.error || event.message || event.reason;
+            });
+        })
         const gpu = await WebGLManager.initialize(document.getElementById("canvas"));
         return new Engine(gpu);
     }
