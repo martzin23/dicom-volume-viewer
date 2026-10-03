@@ -5,9 +5,6 @@ import FPSCounter from '../utility/fps.js';
 import Vector2D from '../math/vector2d.js';
 
 // TODO
-// support dicomdir
-// fix multiple colors
-// fix multiple layers
 // fix slice sorting
 
 class Engine {

@@ -147,6 +147,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.05248;
                 gpu.uniforms.power = 1;
+                element_base.setPower(1);
                 break;
             case 2:
                 addPoint(0, 0.9999999364217163, "#000000", true);
@@ -156,6 +157,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.023572;
                 gpu.uniforms.power = 4.771;
+                element_base.setPower(4.771);
                 break;
             case 3:
                 addPoint(0, 0.9999999364217163, "#000000", true);
@@ -167,6 +169,7 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.1;
                 gpu.uniforms.power = 8.2;
+                element_base.setPower(8.2);
                 break;
             case 4:
                 addPoint(0, 0.9999999364217163, "#000000", true);
@@ -176,14 +179,23 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.1;
                 gpu.uniforms.power = 10;
+                element_base.setPower(10);
                 break;
-            default:
+            case 5:
                 addPoint(0, 0.9999999364217163, "#000000", true);
                 addPoint(0.31939162108309116, 0.9416666067971161, "#000000", false);
                 addPoint(0.3659695658243753, 0.07499999523162872, "#ffffff", false);
                 addPoint(1.0014258119376087, 0.9999999364217163, "#000000", true);
                 gpu.uniforms.strength = 0.01;
                 gpu.uniforms.power = 1.0;
+                element_base.setPower(1.0);
+                break;
+            default:
+                addPoint(0.0, 1.0, "#000000", true);
+                addPoint(1.0, 0.0, "#ffffff", true);
+                gpu.uniforms.strength = 0.1;
+                gpu.uniforms.power = 1.0;
+                element_base.setPower(1.0);
             break;
         }
         update();
@@ -193,10 +205,11 @@ export function createCurve(name = "Curve", onInput = (data) => {}) {
         let commands = "";
         for (const point of points) {
             const position = point.getPosition();
-            commands += `addPoint(${position.x}, ${position.y}, "${point.value}", ${point.disabled});\n`;
+            commands += `addPoint(${Math.round(position.x * 100) / 100}, ${Math.round(position.y * 100)}, "${point.value}", ${point.disabled});\n`;
         }
         commands += `gpu.uniforms.strength = ${gpu.uniforms.strength};\n`;
         commands += `gpu.uniforms.power = ${gpu.uniforms.power};`;
+        commands += `element_base.setPower(${gpu.uniforms.power});`;
         console.log(commands);
     }
 

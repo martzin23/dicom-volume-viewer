@@ -109,9 +109,7 @@ export function createTexture(gl, width, height, depth = null, format = "RGBA8",
     }
     else {
         gl.bindTexture(gl.TEXTURE_3D, texture);
-        console.log(width, height, depth)
         gl.texImage3D(gl.TEXTURE_3D, 0, gl[format], width, height, depth, 0, gl[formats[format].channels], gl[formats[format].type], data);
-        // gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl[(formats[format].filterable) ? "LINEAR" : "NEAREST"]);
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_MAG_FILTER, gl[filter]);
         gl.texParameteri(gl.TEXTURE_3D, gl.TEXTURE_WRAP_S, gl[wrap_mode]);

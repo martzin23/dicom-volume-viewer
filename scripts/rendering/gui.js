@@ -13,6 +13,7 @@ import { createCurve } from '../widgets/curve.js';
 import { createButton } from '../widgets/button.js';
 import { createSliderRadio } from '../widgets/slider_radio.js';
 import { createInfo } from "../widgets/info.js";
+import { createElement } from "../widgets/element.js";
 
 export default class GUIManager {
     constructor(canvas, gpu, camera) {
@@ -136,7 +137,8 @@ export default class GUIManager {
         element_input.addEventListener("change", async (event) => {
             const files = event.target.files;
             try {
-                const volume = await DICOM.dicomToVolume(files);
+                const limit = gpu.gl.getParameter(gpu.gl.MAX_3D_TEXTURE_SIZE);
+                const volume = await DICOM.dicomToVolume(files, limit);
                 // const volume = await DICOM.dicomdirToVolume(files);
                 gpu.reloadImage(volume);
                 camera.position = new Vector3D(volume.size.x, volume.size.x, volume.size.x);
@@ -180,19 +182,17 @@ export default class GUIManager {
             group_density.appendChild(createDrag((value) => {gpu.uniforms.range_min = value;}, () => gpu.uniforms.range_min, "Range Min", -Infinity, Infinity, 1));
             group_density.appendChild(createDrag((value) => {gpu.uniforms.range_max = value;}, () => gpu.uniforms.range_max, "Range Max", -Infinity, Infinity, 1));
             group_density.appendChild(document.createElement("hr"));
-            const button_row = document.createElement("div");
-                button_row.className = "row gap-medium align-center";
-                // button_row.appendChild(document.createElementc);
-                const presets_text = document.createElement("p");
-                presets_text.innerText = "Presets";
-                presets_text.addEventListener("click", (event) => {element_curve.printPreset(gpu);})
-                button_row.appendChild(presets_text);
-                button_row.appendChild(createButton(() => {element_curve.setPreset(0, gpu);}, "Bones"));
-                button_row.appendChild(createButton(() => {element_curve.setPreset(1, gpu);}, "Lungs"));
-                button_row.appendChild(createButton(() => {element_curve.setPreset(2, gpu);}, "Heart"));
-                button_row.appendChild(createButton(() => {element_curve.setPreset(4, gpu);}, "Vein"));
-                button_row.appendChild(createButton(() => {element_curve.setPreset(3, gpu);}, "All"));
-            group_density.appendChild(button_row);
+            group_density.appendChild(createElement("div", undefined, {class: "row gap-medium align-center"}, [
+                createElement("p", "Presets", {onclick:  (event) => {element_curve.printPreset(gpu);}}),
+                createElement("div", undefined, {class: "row gap-medium align-center wrap"}, [
+                    createButton(() => {element_curve.setPreset(0, gpu);}, "Linear"),
+                    createButton(() => {element_curve.setPreset(5, gpu);}, "Bones"),
+                    createButton(() => {element_curve.setPreset(1, gpu);}, "Lungs"),
+                    createButton(() => {element_curve.setPreset(2, gpu);}, "Heart"),
+                    createButton(() => {element_curve.setPreset(4, gpu);}, "Vein"),
+                    createButton(() => {element_curve.setPreset(3, gpu);}, "All"),
+                ])
+            ]));
         menu.appendChild(group_density);
 
         const group_slice = createCollapse("Slice", "fa-cube", true);
