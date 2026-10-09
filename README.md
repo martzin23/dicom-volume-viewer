@@ -3,12 +3,12 @@
 
 ### DICOM Volume Viewer
 
-This is a browser app for viewing volumes in DICOM files. DICOM is a standard for sharing a wide variety medical information, but the focus here are 3D scans such as MRI or CT. It renders a volume of points that have density values using the ray voxel traversal algorithm. The most notable features are: isolating certain density values with a density graph, slicing the volume into smaller sections and adjusting the resolution.
+This is a browser app for viewing volumes in DICOM files. DICOM is a standard for storing a wide variety of medical information, but the focus for this app are 3D scans such as MRI or CT. It renders a volume of voxels that have a density value using the voxel ray traversal algorithm. The most notable features are: isolating certain density values with a density graph, slicing the volume into smaller sections and adjusting the resolution.
 
 > https://martzin23.github.io/dicom-volume-viewer/
 
 > [!warning]
-> This is a personal project, so it goes without saying that this shouldn't be used for real medical work.
+> This is not a professional program, it shouldn't be used for real medical work.
 
 ---
 
